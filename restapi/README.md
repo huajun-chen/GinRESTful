@@ -86,7 +86,15 @@
 - 使用`ShouldBindQuery`绑定`form`参数，`tag`标签：`form:"name"`
 - 使用`ShouldBindJSON`绑定`json`参数，`tag`标签：`json:"name"`
 
+### 响应
 
+所有接口请求的响应系统状态码都返回`200`，在`code`字段自定义状态码
+
+接口请求所返回的数据为`json`格式，如果字段没有值就不显示此字段，返回的字段如下：
+
+- code：自定义响应状态
+- msg：返回的提示信息
+- data：返回的数据
 
 
 

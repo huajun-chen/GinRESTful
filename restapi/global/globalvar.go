@@ -7,7 +7,8 @@ import (
 )
 
 var (
-	Lg       *zap.Logger
-	Settings config.ServerConfig
-	Trans    ut.Translator
+	Lg           *zap.Logger
+	Settings     config.ServerConfig
+	Trans        ut.Translator
+	ParameterErr = "参数不正确"
 )

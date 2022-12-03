@@ -2,6 +2,7 @@ package controller
 
 import (
 	"GinRESTful/restapi/forms"
+	"GinRESTful/restapi/response"
 	"GinRESTful/restapi/utils"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -15,7 +16,8 @@ func Login(c *gin.Context) {
 		utils.HandleValidatorError(c, err)
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{
-		"msg": "success",
+	response.Response(c, response.ResponseStruct{
+		Code: http.StatusOK,
+		Msg:  "success",
 	})
 }

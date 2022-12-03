@@ -2,6 +2,7 @@ package utils
 
 import (
 	"GinRESTful/restapi/global"
+	"GinRESTful/restapi/response"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"net/http"
@@ -10,15 +11,20 @@ import (
 
 // HandleValidatorError 处理字段校验异常
 func HandleValidatorError(c *gin.Context, err error) {
-	// 返回错误信息
+	//如何返回错误信息
 	errs, ok := err.(validator.ValidationErrors)
 	if !ok {
-		c.JSON(http.StatusOK, gin.H{
-			"msg": err.Error(),
+		response.Response(c, response.ResponseStruct{
+			Code: http.StatusInternalServerError,
+			Msg:  global.ParameterErr,
+			Data: err.Error(),
 		})
 	}
-	c.JSON(http.StatusBadRequest, gin.H{
-		"error": removeTopStruct(errs.Translate(global.Trans)),
+	data := removeTopStruct(errs.Translate(global.Trans))
+	response.Response(c, response.ResponseStruct{
+		Code: http.StatusBadRequest,
+		Msg:  global.ParameterErr,
+		Data: data,
 	})
 	return
 }
