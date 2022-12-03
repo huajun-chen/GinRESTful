@@ -1,0 +1,15 @@
+name: "GinRESTful"
+port: 8080
+logsAddress: "./logs/"
+
+mysql:
+  name: "root"
+  host: "***.***.***.***"
+  port: 3306
+  password: "********"
+  dbName: "ginrestful"
+
+redis:
+  host: "***.***.***.***"
+  port: 6379
+  password: "********"
