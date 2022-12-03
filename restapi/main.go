@@ -15,6 +15,10 @@ func main() {
 	Router := initialize.InitRouter()
 	// 3.初始化日志信息
 	initialize.InitLogger()
+	// 4.初始化翻译
+	if err := initialize.InitTrans("zh"); err != nil {
+		panic(err)
+	}
 
 	color.Cyan("Gin服务开始了...")
 	// 启动Gin，并配置端口

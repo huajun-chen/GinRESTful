@@ -42,6 +42,50 @@
 | setting-dev.yaml | 配置文件                             |
 | main.go          | 程序入口文件/主程序                  |
 
+### 参数
+
+**主键使用路径变量，其他字段或其他查询参数用查询变量**
+
+查询变量：
+
+- `GET`方法通过`form`表单提交参数
+- `POST`、`PUT`、`DELETE`方法通过`Body`的`json`格式提交参数
+
+示例：
+
+- 查看用户自己的信息
+
+  ```sh
+  GET /api/v1/user/666
+  ```
+
+- 查看用户名为xxx的信息
+
+  ```sh
+  GET /api/v1/user/info?name=张三
+  ```
+
+- 用户登录
+
+  ```json
+  POST /api/v1/login
+  参数如下：
+  {
+      "user_name": "admin",
+      "password": "admin12345"
+  }
+  ```
+
+参数绑定：
+
+参考文档：[点击跳转](https://cloud.tencent.com/developer/article/1689928)
+
+`Gin`的`ShouldBind`可以绑定全部类型，在绑定前会对参数的类型做判断，此项目里默认不使用`ShouldBind`对参数进行绑定
+
+- 使用`ShouldBindUri`绑定路径参数，`tag`标签：`uri:"id"`
+- 使用`ShouldBindQuery`绑定`form`参数，`tag`标签：`form:"name"`
+- 使用`ShouldBindJSON`绑定`json`参数，`tag`标签：`json:"name"`
+
 
 
 
