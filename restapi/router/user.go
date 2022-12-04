@@ -17,7 +17,7 @@ func UserRouter(r *gin.RouterGroup) {
 		userRouterToken := userRouter.Group("")
 		userRouterToken.Use(middlewares.JWTAuth())
 		{
-			userRouterToken.GET("/list", controller.GetUserList) // 用户列表
+			userRouterToken.GET("/list", middlewares.IsAdminAuth(), controller.GetUserList) // 用户列表
 		}
 	}
 }

@@ -9,6 +9,8 @@ import (
 // InitRouter 初始化路由
 func InitRouter() *gin.Engine {
 	Router := gin.Default()
+	// 跨域中间件
+	Router.Use(middlewares.Cors())
 	// 注册zap相关中间件
 	Router.Use(middlewares.GinLogger(), middlewares.GinRecovery(true))
 	// 路由分组
