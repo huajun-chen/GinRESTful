@@ -6,13 +6,13 @@ mysql:
   name: "root"
   host: "127.0.0.1"
   port: 3306
-  password: "***"
+  password: "1qaz@WSX"
   dbName: "ginrestful"
 
 redis:
   host: "127.0.0.1"
   port: 6379
-  password: "***"
+  password: "1qaz@WSX"
 
 jwt:
   key: "EYsnfKMf5XWk87LASEs28Dj5ZqGkSer8"
