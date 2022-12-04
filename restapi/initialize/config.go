@@ -3,7 +3,6 @@ package initialize
 import (
 	"GinRESTful/restapi/config"
 	"GinRESTful/restapi/global"
-	"github.com/fatih/color"
 	"github.com/spf13/viper"
 )
 
@@ -11,7 +10,7 @@ func InitConfig() {
 	// 实例化viper
 	v := viper.New()
 	// 文件的路径设置
-	v.SetConfigFile("./setting-dev.yaml")
+	v.SetConfigFile(global.SettingFile)
 	err := v.ReadInConfig()
 	if err != nil {
 		panic(err)
@@ -24,5 +23,4 @@ func InitConfig() {
 	}
 	// 传递全局变量
 	global.Settings = serverConfig
-	color.Blue("LogsAddress", global.Settings.LogsAddress)
 }

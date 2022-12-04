@@ -19,6 +19,8 @@ func main() {
 	if err := initialize.InitTrans("zh"); err != nil {
 		panic(err)
 	}
+	// 5.初始化MySQL
+	initialize.InitMysqlDB()
 
 	color.Cyan("Gin服务开始了...")
 	// 启动Gin，并配置端口

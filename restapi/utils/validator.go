@@ -5,7 +5,6 @@ import (
 	"GinRESTful/restapi/response"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
-	"net/http"
 	"strings"
 )
 
@@ -15,14 +14,14 @@ func HandleValidatorError(c *gin.Context, err error) {
 	errs, ok := err.(validator.ValidationErrors)
 	if !ok {
 		response.Response(c, response.ResponseStruct{
-			Code: http.StatusInternalServerError,
+			Code: global.ParameterErrCode,
 			Msg:  global.ParameterErr,
 			Data: err.Error(),
 		})
 	}
 	data := removeTopStruct(errs.Translate(global.Trans))
 	response.Response(c, response.ResponseStruct{
-		Code: http.StatusBadRequest,
+		Code: global.ParameterErrCode,
 		Msg:  global.ParameterErr,
 		Data: data,
 	})
