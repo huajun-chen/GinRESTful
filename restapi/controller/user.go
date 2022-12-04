@@ -18,6 +18,14 @@ func Login(c *gin.Context) {
 		utils.HandleValidatorError(c, err)
 		return
 	}
+	// 验证码
+	if !store.Verify(loginForm.CaptchaId, loginForm.Captcha, true) {
+		response.Response(c, response.ResponseStruct{
+			Code: global.CaptchaIncorCode,
+			Msg:  global.CaptchaIncor,
+		})
+		return
+	}
 	response.Response(c, response.ResponseStruct{
 		Code: http.StatusOK,
 		Msg:  "success",

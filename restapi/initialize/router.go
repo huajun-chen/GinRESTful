@@ -19,6 +19,8 @@ func InitRouter() *gin.Engine {
 		{
 			// 用户路由
 			router.UserRouter(APIv1)
+			// 基础路由
+			router.BaseRouter(APIv1)
 		}
 	}
 	return Router

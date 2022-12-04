@@ -9,7 +9,7 @@ import (
 func UserRouter(r *gin.RouterGroup) {
 	userRouter := r.Group("/user")
 	{
-		userRouter.POST("/login", controller.Login)
-		userRouter.GET("/list", controller.GetUserList)
+		userRouter.POST("/login", controller.Login)     // 登录
+		userRouter.GET("/list", controller.GetUserList) // 用户列表
 	}
 }
