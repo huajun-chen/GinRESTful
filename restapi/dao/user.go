@@ -6,6 +6,7 @@ import (
 	"GinRESTful/restapi/utils"
 )
 
+// GetUserListDao 获取用户列表
 func GetUserListDao(page, pageSize int) (int, []models.User, error) {
 	var usersCount int64
 	var users []models.User
@@ -21,4 +22,15 @@ func GetUserListDao(page, pageSize int) (int, []models.User, error) {
 	}
 
 	return int(usersCount), users, nil
+}
+
+// FindUserInfo 通过username查找用户信息
+func FindUserInfo(username, password string) (*models.User, bool) {
+	var user models.User
+	// 查询用户
+	rows := global.DB.Where(&models.User{Name: username, Password: password}).Find(&user)
+	if rows.RowsAffected < 1 {
+		return &user, false
+	}
+	return &user, true
 }

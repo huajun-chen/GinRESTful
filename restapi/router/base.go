@@ -9,6 +9,7 @@ import (
 func BaseRouter(r *gin.RouterGroup) {
 	baseRouter := r.Group("/base")
 	{
+		// 无需Token的接口
 		baseRouter.GET("/captcha", controller.GetCaptcha) // 验证码
 	}
 }

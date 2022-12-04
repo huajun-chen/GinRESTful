@@ -26,9 +26,22 @@ func Login(c *gin.Context) {
 		})
 		return
 	}
+	user, ok := dao.FindUserInfo(loginForm.UserName, loginForm.Password)
+	if !ok {
+		response.Response(c, response.ResponseStruct{
+			Code: global.NotRegisteredCode,
+			Msg:  global.NotRegistered,
+		})
+		return
+	}
+	token := utils.CreateToken(c, user.ID, user.Role, user.Name)
+	data := make(map[string]interface{})
+	data["id"] = user.ID
+	data["name"] = user.Name
+	data["token"] = token
 	response.Response(c, response.ResponseStruct{
 		Code: http.StatusOK,
-		Msg:  "success",
+		Data: data,
 	})
 }
 

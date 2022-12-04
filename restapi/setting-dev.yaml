@@ -4,12 +4,15 @@ logsAddress: "./logs/"
 
 mysql:
   name: "root"
-  host: "***.***.***.***"
+  host: "127.0.0.1"
   port: 3306
-  password: "********"
+  password: "***"
   dbName: "ginrestful"
 
 redis:
-  host: "***.***.***.***"
+  host: "127.0.0.1"
   port: 6379
-  password: "********"
+  password: "***"
+
+jwt:
+  key: "EYsnfKMf5XWk87LASEs28Dj5ZqGkSer8"
