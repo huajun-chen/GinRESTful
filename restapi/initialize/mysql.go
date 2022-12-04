@@ -28,8 +28,8 @@ func InitMysqlDB() {
 		panic(err)
 	}
 	// 设置连接池
-	sqlDB.SetMaxIdleConns(global.MYSQLMaxIdleConns) // 空闲
-	sqlDB.SetMaxOpenConns(global.MYSQLMaxOpenConns) // 打开
+	sqlDB.SetMaxIdleConns(mysqlInfo.MaxIdleConns) // 空闲
+	sqlDB.SetMaxOpenConns(mysqlInfo.MaxOpenConns) // 打开
 
 	global.DB = db
 	// MYSQL数据迁移

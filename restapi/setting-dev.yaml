@@ -8,6 +8,8 @@ mysql:
   port: 3306
   password: "1qaz@WSX"
   dbName: "ginrestful"
+  maxIdleConns: 10
+  maxOpenConns: 30
 
 redis:
   host: "127.0.0.1"

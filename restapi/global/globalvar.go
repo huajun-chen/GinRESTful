@@ -50,9 +50,7 @@ const (
 	NotRegisteredCode    = 10013
 	AuthInsufficientCode = 10014
 
-	Page              = 1           // 页数，第几页，默认值
-	PageSize          = 20          // 每页的数量，默认值
-	MYSQLMaxIdleConns = 10          // MYSQL最大空闲连接数
-	MYSQLMaxOpenConns = 20          // MYSQL最大打开连接数
-	TokenExpiration   = 60 * 60 * 6 // Token过期时间(默认6小时)
+	Page            = 1           // 页数，第几页，默认值
+	PageSize        = 20          // 每页的数量，默认值
+	TokenExpiration = 60 * 60 * 6 // Token过期时间(默认6小时)
 )
