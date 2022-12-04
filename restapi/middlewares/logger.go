@@ -17,7 +17,6 @@ import (
 func GinLogger() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		start := time.Now()
-		//zap.L().Info(c.Request.URL.Path,
 		zap.L().Info("",
 			zap.Int("status", c.Writer.Status()),                                 // 请求状态
 			zap.String("method", c.Request.Method),                               // 请求方式

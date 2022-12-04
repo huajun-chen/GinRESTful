@@ -1,6 +1,13 @@
 name: "GinRESTful"
 port: 8080
-logsAddress: "./logs/"
+
+logs:
+  level: "debug"
+  fileName: "./logs/ginrestful.log"
+  maxSize: 100
+  maxAge: 365
+  maxBackups: 1000
+  compress: false
 
 mysql:
   name: "root"
