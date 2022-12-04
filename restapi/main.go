@@ -1,17 +1,32 @@
 package main
 
 import (
-	"net/http"
-
-	"github.com/gin-gonic/gin"
+	"GinRESTful/restapi/global"
+	"GinRESTful/restapi/initialize"
+	"fmt"
+	"github.com/fatih/color"
+	"go.uber.org/zap"
 )
 
 func main() {
-	r := gin.Default()
-	r.GET("/ping", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"message": "pong",
-		})
-	})
-	r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
+	// 1.初始化YAML配置
+	initialize.InitConfig()
+	// 2.初始化router
+	Router := initialize.InitRouter()
+	// 3.初始化日志信息
+	initialize.InitLogger()
+	// 4.初始化翻译
+	if err := initialize.InitTrans("zh"); err != nil {
+		panic(err)
+	}
+	// 5.初始化MySQL
+	initialize.InitMysqlDB()
+	// 6.初始化Redis
+	initialize.InitRedis()
+	color.Cyan("Gin服务开始了...")
+	// 启动Gin，并配置端口
+	err := Router.Run(fmt.Sprintf(":%d", global.Settings.Port))
+	if err != nil {
+		zap.L().Info("This is main.go", zap.String("error", "main启动错误..."))
+	}
 }

@@ -1,0 +1,27 @@
+name: "GinRESTful"
+port: 8080
+
+logs:
+  level: "debug"
+  fileName: "./logs/ginrestful.log"
+  maxSize: 100
+  maxAge: 365
+  maxBackups: 1000
+  compress: false
+
+mysql:
+  name: "root"
+  host: "127.0.0.1"
+  port: 3306
+  password: "1qaz@WSX"
+  dbName: "ginrestful"
+  maxIdleConns: 10
+  maxOpenConns: 30
+
+redis:
+  host: "127.0.0.1"
+  port: 6379
+  password: "1qaz@WSX"
+
+jwt:
+  key: "EYsnfKMf5XWk87LASEs28Dj5ZqGkSer8"
