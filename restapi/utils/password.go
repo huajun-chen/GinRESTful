@@ -6,17 +6,14 @@ import (
 )
 
 // SetPassword 设置密码，加密密码
-func SetPassword(password string) ([]byte, error) {
+func SetPassword(password string) (string, error) {
 	userInfo := global.Settings.UserInfo
 	pwdBytes, err := bcrypt.GenerateFromPassword([]byte(password), userInfo.PwdEncDiff)
-	if err != nil {
-		return nil, err
-	}
-	return pwdBytes, nil
+	return string(pwdBytes), err
 }
 
 // CheckPassword 校验密码
-func CheckPassword(enterPwd, memoryPwd string) bool {
-	err := bcrypt.CompareHashAndPassword([]byte(enterPwd), []byte(memoryPwd))
+func CheckPassword(memoryPwd, enterPwd string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(memoryPwd), []byte(enterPwd))
 	return err == nil
 }

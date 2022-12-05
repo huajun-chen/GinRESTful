@@ -24,13 +24,13 @@ func GetUserListDao(page, pageSize int) (int, []models.User, error) {
 	return int(usersCount), users, nil
 }
 
-// FindUserInfo 通过username查找用户信息
-func FindUserInfo(username, password string) (*models.User, bool) {
-	var user models.User
+// FindUserInfo 根据用户名查询用户是否存在，并返回用户信息
+func FindUserInfo(userName string) (*models.User, bool) {
+	var userInfo models.User
 	// 查询用户
-	rows := global.DB.Where(&models.User{UserName: username, Password: password}).Find(&user)
+	rows := global.DB.Where(&models.User{UserName: userName}).Find(&userInfo)
 	if rows.RowsAffected < 1 {
-		return &user, false
+		return &userInfo, false
 	}
-	return &user, true
+	return &userInfo, true
 }

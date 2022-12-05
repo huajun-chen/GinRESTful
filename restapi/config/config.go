@@ -53,5 +53,6 @@ type AdminConfig struct {
 
 // UserConfig 用户信息配置
 type UserConfig struct {
-	PwdEncDiff int `mapstructure:"pwdEncDiff"` // 密码加密难度（4~31，默认10）
+	PwdEncDiff   int  `mapstructure:"pwdEncDiff"`   // 密码加密难度（4~31，默认10）
+	CaptchaLogin bool `mapstructure:"captchaLogin"` // 是否开启验证码登录
 }

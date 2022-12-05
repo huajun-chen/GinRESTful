@@ -19,14 +19,19 @@ func Login(c *gin.Context) {
 		return
 	}
 	// 验证码
-	if !store.Verify(loginForm.CaptchaId, loginForm.Captcha, true) {
-		response.Response(c, response.ResponseStruct{
-			Code: global.CaptchaIncorCode,
-			Msg:  global.CaptchaIncor,
-		})
-		return
+	userSet := global.Settings.UserInfo
+	// 判断是否开启验证码登录
+	if userSet.CaptchaLogin {
+		if !store.Verify(loginForm.CaptchaId, loginForm.Captcha, true) {
+			response.Response(c, response.ResponseStruct{
+				Code: global.CaptchaIncorCode,
+				Msg:  global.CaptchaIncor,
+			})
+			return
+		}
 	}
-	user, ok := dao.FindUserInfo(loginForm.UserName, loginForm.Password)
+	// 查询用户是否存在
+	userInfo, ok := dao.FindUserInfo(loginForm.UserName)
 	if !ok {
 		response.Response(c, response.ResponseStruct{
 			Code: global.NotRegisteredCode,
@@ -34,10 +39,19 @@ func Login(c *gin.Context) {
 		})
 		return
 	}
-	token := utils.CreateToken(c, user.ID, user.Role, user.UserName)
+	// 判断密码是否正确
+	pwdBool := utils.CheckPassword(userInfo.Password, loginForm.Password)
+	if !pwdBool {
+		response.Response(c, response.ResponseStruct{
+			Code: global.PassWordErrCode,
+			Msg:  global.PassWordErr,
+		})
+		return
+	}
+	token := utils.CreateToken(c, userInfo.ID, userInfo.Role, userInfo.UserName)
 	data := make(map[string]interface{})
-	data["id"] = user.ID
-	data["name"] = user.UserName
+	data["id"] = userInfo.ID
+	data["name"] = userInfo.UserName
 	data["token"] = token
 	response.Response(c, response.ResponseStruct{
 		Code: http.StatusOK,
