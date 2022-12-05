@@ -11,13 +11,16 @@ type User struct {
 	CreatedAt time.Time      `json:"created_at"`
 	UpdatedAt time.Time      `json:"updated_at"`
 	DeletedAt gorm.DeletedAt `json:"deleted_at" gorm:"index"`
-	Name      string         `json:"name" gorm:"size:8;comment:'名字'"`
-	Password  string         `json:"password" gorm:"size:20;comment:'密码'"`
-	HeadUrl   string         `json:"head_url" gorm:"size:512;comment:'网址'"`
-	Birthday  time.Time      `json:"birthday" gorm:"comment:'生日'"`
-	Address   string         `json:"address" gorm:"size:256;comment:'地址'"`
-	Desc      string         `json:"desc" gorm:"size:256;comment:'描述'"`
-	Gender    int            `json:"gender" gorm:"size:4;comment:'性别'"`
-	Role      int            `json:"role" gorm:"size:4;comment:'角色'"`
+	UserName  string         `json:"user_name" gorm:"size:8;comment:'用户名'"`
+	Password  string         `json:"password" gorm:"size:64;comment:'密码'"`
+	Gender    int            `json:"gender" gorm:"size:4;default:3;comment:'性别（1：男；2：女；3：未知）'"`
+	Desc      string         `json:"desc" gorm:"size:256;default:'这个人很懒，什么都没留下...';comment:'描述'"`
+	Role      int            `json:"role" gorm:"size:4;default:2;comment:'角色（1：管理员；2：普通用户）'"`
 	Mobile    string         `json:"mobile" gorm:"size:11;comment:'电话'"`
+	Email     string         `json:"email" gorm:"size:32;comment:'邮箱'"`
+}
+
+// TableName 自定义表名
+func (User) TableName() string {
+	return "user"
 }

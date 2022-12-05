@@ -25,21 +25,23 @@
 
 目录说明：
 
+**备注**：<font color=Red>GitHub仓库缺少2个目录（logs、static），需要自己手动添加</font>
+
 | 文件/目录        | 概述                                 | 文件概述                                                     |
 | ---------------- | ------------------------------------ | ------------------------------------------------------------ |
 | config           | 配置文件对应的结构体定义             | config.go：配置的对应的struct                                |
 | controller       | 业务层                               | catpcha.go：生成图片验证码<br>user.go：用户模块控制层面相关代码 |
 | dao              | 操作数据库，给业务controller提供数据 | user.go：用户模块数据库操作                                  |
-| forms            | 字段验证的struct                     | user.go：用户模块参数对应的struct定义                        |
+| forms            | 字段验证的struct                     | page.go：与页面、页数相关的参数的struct<br>user.go：用户模块参数对应的struct定义 |
 | global           | 定义全局变量                         | globalvar.go：定义后端项目的全局变量                         |
-| initialize       | 服务初始化                           | config.go：使用Viper初始化获取配置文件<br>logger.go：使用zap初始化项目日志<br>mysql.go：使用GORM初始化MYSQL数据库<br>redis.go：初始化Redis缓存数据库<br>router.go：初始化项目的路由<br>validator.go：使用Validator初始化参数校验，参数校验信息中英文翻译 |
+| initialize       | 服务初始化                           | account.go：初始化一个admin账号<br>config.go：使用Viper初始化获取配置文件<br>logger.go：使用zap初始化项目日志<br>mysql.go：使用GORM初始化MYSQL数据库<br>redis.go：初始化Redis缓存数据库<br>router.go：初始化项目的路由<br>validator.go：使用Validator初始化参数校验，参数校验信息中英文翻译 |
 | logs             | 日志存储                             | 存储每天的日志文件                                           |
 | middlewares      | 中间件                               | admin.go：权限相关的中间件<br>cors.go：跨域中间件<br>jwt.go：JWT验证中间件<br>logger.go：日志中间件 |
 | models           | 数据库字段定义                       | user.go：用户模块的数据库字段                                |
 | response         | 统一封装response                     | response.go：对后端返回的数据格式进行统一封装                |
-| router           | 路由                                 | base.go：项目的基础路由<br>user.go：用户模块路由             |
+| router           | 路由                                 | routerv1.go：V1版本路由                                      |
 | static           | 资源文件夹                           | 存放静态资源的目录                                           |
-| utils            | 工具                                 | createtoken.go：生成Token<br>migration.go：执行main启动项目时对数据库表新建或迁移<br>page.go：与页数，每页的数量相关的代码封装<br>validator.go：参数校验出现错误时代码统一封装 |
+| utils            | 工具                                 | createtoken.go：生成Token<br>migration.go：执行main启动项目时对数据库表新建或迁移<br>page.go：与页数，每页的数量相关的代码封装<br>password.go：密码加密与密码校验<br>validator.go：参数校验出现错误时代码统一封装 |
 | main.go          | 程序入口文件/主程序                  |                                                              |
 | README.md        | 后端Readme文件                       |                                                              |
 | setting-dev.yaml | 配置文件                             |                                                              |
@@ -69,9 +71,13 @@
 
 - 用户登录
 
-  ```json
+  ```sh
   POST /api/v1/login
+  ```
+
   参数如下：
+
+  ```json
   {
       "user_name": "admin",
       "password": "admin12345"
@@ -107,6 +113,10 @@
     "data": {}
 }
 ```
+
+**备注：**<font color=Red>返回的`json`数据，只有`code`、`total`、`id`为数字，其他的全部字段都为字符串；项目中，返回字段的结构体与数据库字段的结构体不是同一个，返回的结构体单独定义，原因：返回的字段不一定全部都是数据库的字段，也有可能是数据库字段之间计算之后的值，所以返回的数据结构体单独定义</font>
+
+
 
 
 

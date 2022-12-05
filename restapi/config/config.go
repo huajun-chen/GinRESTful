@@ -8,6 +8,8 @@ type ServerConfig struct {
 	RedisInfo RedisConfig `mapstructure:"redis"`
 	LogsInfo  LogConfig   `mapstructure:"logs"`
 	JWTKey    JWTConfig   `mapstructure:"jwt"`
+	AdminInfo AdminConfig `mapstructure:"adminaccount"`
+	UserInfo  UserConfig  `mapstructure:"user"`
 }
 
 // LogConfig 日志配置
@@ -41,4 +43,16 @@ type RedisConfig struct {
 // JWTConfig JWT签名密钥
 type JWTConfig struct {
 	SigningKey string `mapstructure:"key"`
+}
+
+// AdminConfig 管理员账户配置
+type AdminConfig struct {
+	UserName string `mapstructure:"userName"`
+	Password string `mapstructure:"password"`
+}
+
+// UserConfig 用户信息配置
+type UserConfig struct {
+	PwdEncDiff   int  `mapstructure:"pwdEncDiff"`   // 密码加密难度（4~31，默认10）
+	CaptchaLogin bool `mapstructure:"captchaLogin"` // 是否开启验证码登录
 }

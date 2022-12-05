@@ -33,6 +33,12 @@ const (
 	CreateTokenFail  = "生成Token失败"
 	NotRegistered    = "该用户未注册"
 	AuthInsufficient = "权限不足"
+	PassWordErr      = "密码不正确"
+	PassWordDiff     = "密码不一致"
+	UserNameExists   = "用户名已存在"
+	RegisterFail     = "注册失败"
+	RegisterSucc     = "注册成功"
+	LoginSucc        = "登录成功"
 
 	ParameterErrCode     = 10000
 	InsertDBErrCode      = 10001
@@ -49,6 +55,12 @@ const (
 	CreateTokenFailCode  = 10012
 	NotRegisteredCode    = 10013
 	AuthInsufficientCode = 10014
+	PassWordErrCode      = 10015
+	PassWordDiffCode     = 10016
+	UserNameExistsCode   = 10017
+	RegisterFailCode     = 10018
+	RegisterSuccCode     = 10019
+	LoginSuccCode        = 10020
 
 	Page            = 1           // 页数，第几页，默认值
 	PageSize        = 20          // 每页的数量，默认值

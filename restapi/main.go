@@ -23,6 +23,9 @@ func main() {
 	initialize.InitMysqlDB()
 	// 6.初始化Redis
 	initialize.InitRedis()
+	// 7.初始化admin账户
+	initialize.InitAdminAccount()
+
 	color.Cyan("Gin服务开始了...")
 	// 启动Gin，并配置端口
 	err := Router.Run(fmt.Sprintf(":%d", global.Settings.Port))
