@@ -4,6 +4,7 @@ import (
 	"GinRESTful/restapi/dao"
 	"GinRESTful/restapi/forms"
 	"GinRESTful/restapi/global"
+	"GinRESTful/restapi/models"
 	"GinRESTful/restapi/response"
 	"GinRESTful/restapi/utils"
 	"github.com/gin-gonic/gin"
@@ -23,6 +24,71 @@ type NeedsUserInfo struct {
 	Role      string `json:"role"`
 	Mobile    string `json:"mobile"`
 	Email     string `json:"email"`
+}
+
+// Register 注册用户
+func Register(c *gin.Context) {
+	registerForm := forms.RegisterForm{}
+	if err := c.ShouldBindJSON(&registerForm); err != nil {
+		// 参数异常
+		utils.HandleValidatorError(c, err)
+		return
+	}
+	// 验证码
+	userSet := global.Settings.UserInfo
+	// 判断是否开启验证码登录
+	if userSet.CaptchaLogin {
+		if !store.Verify(registerForm.CaptchaId, registerForm.Captcha, true) {
+			response.Response(c, response.ResponseStruct{
+				Code: global.CaptchaIncorCode,
+				Msg:  global.CaptchaIncor,
+			})
+			return
+		}
+	}
+	// 判断用户名是否存在
+	_, ok := dao.FindUserInfo(registerForm.UserName)
+	if ok {
+		response.Response(c, response.ResponseStruct{
+			Code: global.UserNameExistsCode,
+			Msg:  global.UserNameExists,
+		})
+		return
+	}
+	// 两次密码是否一致
+	if registerForm.Password != registerForm.Password2 {
+		response.Response(c, response.ResponseStruct{
+			Code: global.PassWordDiffCode,
+			Msg:  global.PassWordDiff,
+		})
+		return
+	}
+	// 密码加密
+	pwd, _ := utils.SetPassword(registerForm.Password)
+	// 添加用户
+	insterUserInfo := models.User{
+		UserName: registerForm.UserName,
+		Password: pwd,
+	}
+	userId, err := dao.RegisterUser(insterUserInfo)
+	if err != nil {
+		response.Response(c, response.ResponseStruct{
+			Code: global.RegisterFailCode,
+			Msg:  global.RegisterFail,
+		})
+		return
+	}
+	// 获取Token
+	token := utils.CreateToken(c, userId, 2, insterUserInfo.UserName)
+	data := make(map[string]interface{})
+	data["id"] = userId
+	data["name"] = insterUserInfo.UserName
+	data["token"] = token
+	response.Response(c, response.ResponseStruct{
+		Code: global.RegisterSuccCode,
+		Msg:  global.RegisterSucc,
+		Data: data,
+	})
 }
 
 // Login 用户登录
@@ -69,7 +135,8 @@ func Login(c *gin.Context) {
 	data["name"] = userInfo.UserName
 	data["token"] = token
 	response.Response(c, response.ResponseStruct{
-		Code: http.StatusOK,
+		Code: global.LoginSuccCode,
+		Msg:  global.LoginSucc,
 		Data: data,
 	})
 }

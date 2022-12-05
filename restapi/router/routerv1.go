@@ -20,7 +20,8 @@ func Routerv1(r *gin.RouterGroup) {
 	userRouter := r.Group("/user")
 	{
 		// 无需Token的接口
-		userRouter.POST("/login", controller.Login) // 登录
+		userRouter.POST("/register", controller.Register) // 注册
+		userRouter.POST("/login", controller.Login)       // 登录
 		// 需要Token的接口
 		userRouterToken := userRouter.Group("")
 		userRouterToken.Use(middlewares.JWTAuth())

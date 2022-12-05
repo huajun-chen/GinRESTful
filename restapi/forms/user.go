@@ -12,3 +12,9 @@ type LoginForm struct {
 type UserListForm struct {
 	PageForm
 }
+
+// RegisterForm 用户注册
+type RegisterForm struct {
+	LoginForm
+	Password2 string `json:"password2" binding:"required,min=8,max=64"` // 重复密码
+}

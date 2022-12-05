@@ -34,3 +34,12 @@ func FindUserInfo(userName string) (*models.User, bool) {
 	}
 	return &userInfo, true
 }
+
+// RegisterUser 用户注册
+func RegisterUser(insterUserInfo models.User) (uint, error) {
+	err := global.DB.Create(&insterUserInfo).Error
+	if err != nil {
+		return 0, err
+	}
+	return insterUserInfo.ID, nil
+}

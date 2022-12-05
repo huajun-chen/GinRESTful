@@ -32,4 +32,4 @@ adminaccount:
 
 user:
   pwdEncDiff: 16
-  captchaLogin: false
+  captchaLogin: true
