@@ -10,6 +10,5 @@ type LoginForm struct {
 
 // UserListForm 用户列表参数
 type UserListForm struct {
-	Page     int `form:"page"`      // 页数，第几页
-	PageSize int `form:"page_size"` // 每页的数量
+	PageForm
 }

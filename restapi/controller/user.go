@@ -8,7 +8,22 @@ import (
 	"GinRESTful/restapi/utils"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"strconv"
 )
+
+// NeedsUserInfo 定义结构体存储需要返回的用户数据
+// values里的数据除了ID是int类型，其他的都是字符串类型，返回的字段不一定全部都是数据库的字段
+// 也有可能是数据库字段之间计算之后的值，所以返回的数据结构体单独定义
+type NeedsUserInfo struct {
+	ID        int    `json:"id"`
+	CreatedAt string `json:"created_at"`
+	UserName  string `json:"user_name"`
+	Gender    string `json:"gender"`
+	Desc      string `json:"desc"`
+	Role      string `json:"role"`
+	Mobile    string `json:"mobile"`
+	Email     string `json:"email"`
+}
 
 // Login 用户登录
 func Login(c *gin.Context) {
@@ -59,6 +74,7 @@ func Login(c *gin.Context) {
 	})
 }
 
+// GetUserList 获取用户列表
 func GetUserList(c *gin.Context) {
 	// 获取参数
 	userListForm := forms.UserListForm{}
@@ -84,10 +100,25 @@ func GetUserList(c *gin.Context) {
 		})
 		return
 	}
+	// 过滤用户列表，只返回需要的数据
+	var values []NeedsUserInfo
+	for _, u := range userList {
+		needUserInfo := NeedsUserInfo{
+			ID:        int(u.ID),
+			CreatedAt: u.CreatedAt.Format("2006-01-02"),
+			UserName:  u.UserName,
+			Gender:    strconv.Itoa(u.Gender),
+			Desc:      u.Desc,
+			Role:      strconv.Itoa(u.Role),
+			Mobile:    u.Mobile,
+			Email:     u.Email,
+		}
+		values = append(values, needUserInfo)
+	}
 	// 获取数据正常
 	data := make(map[string]interface{})
 	data["total"] = total
-	data["values"] = userList
+	data["values"] = values
 	response.Response(c, response.ResponseStruct{
 		Code: http.StatusOK,
 		Data: data,
