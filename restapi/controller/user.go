@@ -34,10 +34,10 @@ func Login(c *gin.Context) {
 		})
 		return
 	}
-	token := utils.CreateToken(c, user.ID, user.Role, user.Name)
+	token := utils.CreateToken(c, user.ID, user.Role, user.UserName)
 	data := make(map[string]interface{})
 	data["id"] = user.ID
-	data["name"] = user.Name
+	data["name"] = user.UserName
 	data["token"] = token
 	response.Response(c, response.ResponseStruct{
 		Code: http.StatusOK,

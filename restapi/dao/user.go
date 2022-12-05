@@ -28,7 +28,7 @@ func GetUserListDao(page, pageSize int) (int, []models.User, error) {
 func FindUserInfo(username, password string) (*models.User, bool) {
 	var user models.User
 	// 查询用户
-	rows := global.DB.Where(&models.User{Name: username, Password: password}).Find(&user)
+	rows := global.DB.Where(&models.User{UserName: username, Password: password}).Find(&user)
 	if rows.RowsAffected < 1 {
 		return &user, false
 	}

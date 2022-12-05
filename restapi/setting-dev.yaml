@@ -25,3 +25,10 @@ redis:
 
 jwt:
   key: "EYsnfKMf5XWk87LASEs28Dj5ZqGkSer8"
+
+adminaccount:
+  userName: "admin"
+  password: "admin12345"
+
+user:
+  pwdEncDiff: 16
