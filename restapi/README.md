@@ -39,9 +39,9 @@
 | middlewares      | 中间件                               | admin.go：权限相关的中间件<br>cors.go：跨域中间件<br>jwt.go：JWT验证中间件<br>logger.go：日志中间件 |
 | models           | 数据库字段定义                       | user.go：用户模块的数据库字段                                |
 | response         | 统一封装response                     | response.go：对后端返回的数据格式进行统一封装                |
-| router           | 路由                                 | base.go：项目的基础路由<br>user.go：用户模块路由             |
+| router           | 路由                                 | routerv1.go：V1版本路由                                      |
 | static           | 资源文件夹                           | 存放静态资源的目录                                           |
-| utils            | 工具                                 | createtoken.go：生成Token<br>migration.go：执行main启动项目时对数据库表新建或迁移<br>page.go：与页数，每页的数量相关的代码封装<br>validator.go：参数校验出现错误时代码统一封装 |
+| utils            | 工具                                 | createtoken.go：生成Token<br>migration.go：执行main启动项目时对数据库表新建或迁移<br>page.go：与页数，每页的数量相关的代码封装<br>password.go：密码加密与密码校验<br>validator.go：参数校验出现错误时代码统一封装 |
 | main.go          | 程序入口文件/主程序                  |                                                              |
 | README.md        | 后端Readme文件                       |                                                              |
 | setting-dev.yaml | 配置文件                             |                                                              |

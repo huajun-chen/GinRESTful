@@ -19,10 +19,7 @@ func InitRouter() *gin.Engine {
 		// v1版本路由
 		APIv1 := APIGroup.Group("/v1")
 		{
-			// 用户路由
-			router.UserRouter(APIv1)
-			// 基础路由
-			router.BaseRouter(APIv1)
+			router.Routerv1(APIv1)
 		}
 	}
 	return Router
