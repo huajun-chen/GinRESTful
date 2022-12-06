@@ -62,3 +62,9 @@ func DaoModifyUserInfo(userId uint, userMod models.User) error {
 	}
 	return nil
 }
+
+// DaoDelUserToPriKey 根据用户主键删除用户（假删除，正常获取不到）
+func DaoDelUserToPriKey(userMod models.User) error {
+	err := global.DB.Delete(&userMod).Error
+	return err
+}

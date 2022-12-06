@@ -30,7 +30,8 @@ func Routerv1(r *gin.RouterGroup) {
 		{
 			userRouterTokenAdmin := userRouterToken.Group("")
 			userRouterTokenAdmin.Use(middlewares.IsAdminAuth())
-			userRouterTokenAdmin.GET("/list", controller.GetUserList) // 用户列表
+			userRouterTokenAdmin.GET("/list", controller.GetUserList)    // 用户列表
+			userRouterTokenAdmin.DELETE("/info/:id", controller.DelUser) // 删除用户信息
 		}
 	}
 }

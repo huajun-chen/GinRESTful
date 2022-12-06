@@ -258,3 +258,27 @@ func ModifyUserInfo(c *gin.Context) {
 		Msg:  global.UpdateDBSucc,
 	})
 }
+
+func DelUser(c *gin.Context) {
+	// 从参数中获取用户ID
+	userId := forms.IdForm{}
+	if err := c.ShouldBindUri(&userId); err != nil {
+		utils.HandleValidatorError(c, err)
+		return
+	}
+
+	userMod := models.User{ID: userId.ID}
+	// 删除用户
+	err := dao.DaoDelUserToPriKey(userMod)
+	if err != nil {
+		response.Response(c, response.ResponseStruct{
+			Code: global.DeleteDBErrCode,
+			Msg:  global.DeleteDBErr,
+		})
+		return
+	}
+	response.Response(c, response.ResponseStruct{
+		Code: http.StatusOK,
+		Msg:  global.DeleteDBSucc,
+	})
+}
