@@ -7,7 +7,6 @@ import (
 	"GinRESTful/restapi/models"
 	"GinRESTful/restapi/response"
 	"GinRESTful/restapi/utils"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
@@ -128,6 +127,42 @@ func Login(c *gin.Context) {
 	})
 }
 
+// GetMyselfInfo 获取用户自己的信息
+func GetMyselfInfo(c *gin.Context) {
+	// 从参数中获取用户ID
+	userId := forms.IdForm{}
+	if err := c.ShouldBindUri(&userId); err != nil {
+		utils.HandleValidatorError(c, err)
+		return
+	}
+	// 判断是本人，不能获取别人的用户信息
+	tokenUserId, _ := c.Get("userId")
+	if tokenUserId != userId.ID {
+		response.Response(c, response.ResponseStruct{
+			Code: global.AuthInsufficientCode,
+			Msg:  global.AuthInsufficient,
+		})
+		return
+	}
+
+	// 通过用户ID获取用户信息
+	myselfInfo, _ := dao.DaoFindUserInfoToId(userId.ID)
+	data := forms.NeedsUserInfo{
+		ID:        int(myselfInfo.ID),
+		CreatedAt: myselfInfo.CreatedAt.Format("2006-01-02"),
+		UserName:  myselfInfo.UserName,
+		Gender:    strconv.Itoa(myselfInfo.Gender),
+		Desc:      myselfInfo.Desc,
+		Role:      strconv.Itoa(myselfInfo.Role),
+		Mobile:    myselfInfo.Mobile,
+		Email:     myselfInfo.Email,
+	}
+	response.Response(c, response.ResponseStruct{
+		Code: http.StatusOK,
+		Data: data,
+	})
+}
+
 // GetUserList 获取用户列表
 func GetUserList(c *gin.Context) {
 	// 获取参数
@@ -218,7 +253,6 @@ func ModifyUserInfo(c *gin.Context) {
 			})
 			return
 		}
-		fmt.Println("哈哈", "旧密码", modUserInfoForm.PasswordOld, "新密码：", modUserInfoForm.Password)
 		// 判断旧密码与新密码是否一致
 		if modUserInfoForm.PasswordOld == modUserInfoForm.Password {
 			response.Response(c, response.ResponseStruct{
@@ -259,6 +293,7 @@ func ModifyUserInfo(c *gin.Context) {
 	})
 }
 
+// DelUser 删除用户信息（需要权限）
 func DelUser(c *gin.Context) {
 	// 从参数中获取用户ID
 	userId := forms.IdForm{}
