@@ -7,6 +7,10 @@ import (
 )
 
 // Routerv1 V1版本路由
+// 参数：
+//		r：Gin的路由分组的指针
+// 返回值：
+//		无
 func Routerv1(r *gin.RouterGroup) {
 	// 基础功能的路由
 	baseRouter := r.Group("/base")

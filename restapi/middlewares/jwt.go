@@ -16,6 +16,7 @@ var (
 	TokenInvalid     = errors.New("Couldn't handle this token:") // 无法处理此令牌
 )
 
+// CustomClaims 自定义声明
 type CustomClaims struct {
 	ID          uint   // ID
 	Name        string // 名字
@@ -28,6 +29,10 @@ type JWT struct {
 }
 
 // JWTAuth JWT认证
+// 参数：
+//		无
+// 返回值：
+//		gin.HandlerFunc：Gin的处理程序
 func JWTAuth() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// 我们这里jwt鉴权取头部信息 x-token 登录时回返回token信息
@@ -68,17 +73,32 @@ func JWTAuth() gin.HandlerFunc {
 	}
 }
 
+// NewJWT NEW JEW
+// 参数：
+//		无
+// 返回值：
+//		*JEW：jwt的指针
 func NewJWT() *JWT {
 	return &JWT{[]byte(global.Settings.JWTKey.SigningKey)}
 }
 
 // CreateToken 创建一个token
+// 参数：
+//		claims：声明
+// 返回值：
+//		string：Token字符串
+//		error：错误信息
 func (j *JWT) CreateToken(claims CustomClaims) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	return token.SignedString(j.SigningKey)
 }
 
 // ParseToken 解析Token
+// 参数：
+//		tokenString：Token字符串
+// 返回值：
+//		CustomClaims：自定义声明
+//		error：错误信息
 func (j *JWT) ParseToken(tokenString string) (*CustomClaims, error) {
 	token, err := jwt.ParseWithClaims(tokenString, &CustomClaims{}, func(token *jwt.Token) (interface{}, error) {
 		return j.SigningKey, nil
@@ -107,6 +127,11 @@ func (j *JWT) ParseToken(tokenString string) (*CustomClaims, error) {
 }
 
 // RefreshToken 更新Token
+// 参数：
+//		tokenString：Token字符串
+// 返回值：
+//		string：更新后的Token字符串
+//		error：错误信息
 func (j *JWT) RefreshToken(tokenString string) (string, error) {
 	jwt.TimeFunc = func() time.Time {
 		return time.Unix(0, 0)

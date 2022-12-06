@@ -15,6 +15,10 @@ import (
 )
 
 // InitTrans validator信息翻译
+// 参数：
+//		locale：语言环境（中文/英文/...）
+// 返回值：
+//		err：错误信息
 func InitTrans(locale string) (err error) {
 	// 修改Gin框架中的validator引擎属性，实现定制
 	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {

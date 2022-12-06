@@ -13,6 +13,10 @@ import (
 var store = base64Captcha.DefaultMemStore
 
 // GetCaptcha 获取验证码
+// 参数：
+//		c *gin.Context：gin.Context的指针
+// 返回值：
+//		无
 func GetCaptcha(c *gin.Context) {
 	driver := base64Captcha.NewDriverDigit(80, 240, 5, 0.7, 80)
 	cp := base64Captcha.NewCaptcha(driver, store)

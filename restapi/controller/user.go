@@ -13,6 +13,10 @@ import (
 )
 
 // Register 注册用户
+// 参数：
+//		c *gin.Context：gin.Context的指针
+// 返回值：
+//		无
 func Register(c *gin.Context) {
 	registerForm := forms.RegisterForm{}
 	if err := c.ShouldBindJSON(&registerForm); err != nil {
@@ -78,6 +82,10 @@ func Register(c *gin.Context) {
 }
 
 // Login 用户登录
+// 参数：
+//		c *gin.Context：gin.Context的指针
+// 返回值：
+//		无
 func Login(c *gin.Context) {
 	loginForm := forms.LoginForm{}
 	if err := c.ShouldBindJSON(&loginForm); err != nil {
@@ -128,6 +136,10 @@ func Login(c *gin.Context) {
 }
 
 // GetMyselfInfo 获取用户自己的信息
+// 参数：
+//		c *gin.Context：gin.Context的指针
+// 返回值：
+//		无
 func GetMyselfInfo(c *gin.Context) {
 	// 从参数中获取用户ID
 	userId := forms.IdForm{}
@@ -164,6 +176,10 @@ func GetMyselfInfo(c *gin.Context) {
 }
 
 // GetUserList 获取用户列表
+// 参数：
+//		c *gin.Context：gin.Context的指针
+// 返回值：
+//		无
 func GetUserList(c *gin.Context) {
 	// 获取参数
 	userListForm := forms.UserListForm{}
@@ -215,6 +231,10 @@ func GetUserList(c *gin.Context) {
 }
 
 // ModifyUserInfo 修改用户信息
+// 参数：
+//		c *gin.Context：gin.Context的指针
+// 返回值：
+//		无
 func ModifyUserInfo(c *gin.Context) {
 	// 获取需要修改的用户ID
 	userId := forms.IdForm{}
@@ -294,6 +314,10 @@ func ModifyUserInfo(c *gin.Context) {
 }
 
 // DelUser 删除用户信息（需要权限）
+// 参数：
+//		c *gin.Context：gin.Context的指针
+// 返回值：
+//		无
 func DelUser(c *gin.Context) {
 	// 从参数中获取用户ID
 	userId := forms.IdForm{}

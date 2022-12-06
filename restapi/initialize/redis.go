@@ -6,6 +6,11 @@ import (
 	"github.com/go-redis/redis"
 )
 
+// InitRedis 初始化Redis
+// 参数：
+//		无
+// 返回值：
+//		无
 func InitRedis() {
 	redisInfo := global.Settings.RedisInfo
 	redisAddr := fmt.Sprintf("%s:%d",

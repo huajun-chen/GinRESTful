@@ -8,6 +8,10 @@ import (
 )
 
 // InitAdminAccount 初始化一个admin账户
+// 参数：
+//		无
+// 返回值：
+//		无
 func InitAdminAccount() {
 	// 默认配置的管理员用户名
 	adminInfo := global.Settings.AdminInfo

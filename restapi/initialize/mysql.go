@@ -9,6 +9,10 @@ import (
 )
 
 // InitMysqlDB 初始化MySQL
+// 参数：
+//		无
+// 返回值：
+//		无
 func InitMysqlDB() {
 	mysqlInfo := global.Settings.MysqlInfo
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local",

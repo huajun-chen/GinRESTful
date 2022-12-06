@@ -7,6 +7,10 @@ import (
 )
 
 // InitRouter 初始化路由
+// 参数：
+//		*gin.Engine：Gin引擎的指针
+// 返回值：
+//		无
 func InitRouter() *gin.Engine {
 	Router := gin.Default()
 	// 跨域中间件
