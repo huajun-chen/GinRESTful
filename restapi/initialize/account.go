@@ -12,7 +12,7 @@ func InitAdminAccount() {
 	// 默认配置的管理员用户名
 	adminInfo := global.Settings.AdminInfo
 	// 查询admin是否存在
-	_, ok := dao.FindUserInfo(adminInfo.UserName)
+	_, ok := dao.DaoFindUserInfoToUserName(adminInfo.UserName)
 	// 不存在，创建
 	if !ok {
 		// 加密密码

@@ -19,7 +19,7 @@ func CreateToken(c *gin.Context, id uint, role int, name string) string {
 		StandardClaims: jwt.StandardClaims{
 			NotBefore: time.Now().Unix(),
 			// Token过期时间
-			ExpiresAt: time.Now().Unix() + int64(global.TokenExpiration),
+			ExpiresAt: time.Now().Unix() + int64(global.Settings.JWTKey.TokenExpiration),
 			Issuer:    global.Settings.Name,
 		},
 	}

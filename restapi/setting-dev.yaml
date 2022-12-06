@@ -1,5 +1,7 @@
 name: "GinRESTful"
 port: 8080
+page: 1
+pageSize: 20
 
 logs:
   level: "debug"
@@ -25,6 +27,7 @@ redis:
 
 jwt:
   key: "EYsnfKMf5XWk87LASEs28Dj5ZqGkSer8"
+  tokenExpiration: 21600
 
 adminaccount:
   userName: "admin"

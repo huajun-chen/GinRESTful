@@ -32,7 +32,7 @@
 | config           | 配置文件对应的结构体定义             | config.go：配置的对应的struct                                |
 | controller       | 业务层                               | catpcha.go：生成图片验证码<br>user.go：用户模块控制层面相关代码 |
 | dao              | 操作数据库，给业务controller提供数据 | user.go：用户模块数据库操作                                  |
-| forms            | 字段验证的struct                     | page.go：与页面、页数相关的参数的struct<br>user.go：用户模块参数对应的struct定义 |
+| forms            | 字段验证的struct                     | base.go：基础的参数对应的struct<br>user.go：用户模块参数，返回的数据结构对应的struct定义 |
 | global           | 定义全局变量                         | globalvar.go：定义后端项目的全局变量                         |
 | initialize       | 服务初始化                           | account.go：初始化一个admin账号<br>config.go：使用Viper初始化获取配置文件<br>logger.go：使用zap初始化项目日志<br>mysql.go：使用GORM初始化MYSQL数据库<br>redis.go：初始化Redis缓存数据库<br>router.go：初始化项目的路由<br>validator.go：使用Validator初始化参数校验，参数校验信息中英文翻译 |
 | logs             | 日志存储                             | 存储每天的日志文件                                           |

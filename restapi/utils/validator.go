@@ -18,6 +18,7 @@ func HandleValidatorError(c *gin.Context, err error) {
 			Msg:  global.ParameterErr,
 			Data: err.Error(),
 		})
+		return
 	}
 	data := removeTopStruct(errs.Translate(global.Trans))
 	response.Response(c, response.ResponseStruct{
@@ -25,7 +26,6 @@ func HandleValidatorError(c *gin.Context, err error) {
 		Msg:  global.ParameterErr,
 		Data: data,
 	})
-	return
 }
 
 // removeTopStruct 定义一个去掉结构体名称前缀的自定义方法

@@ -37,8 +37,8 @@ const (
 	PassWordDiff     = "密码不一致"
 	UserNameExists   = "用户名已存在"
 	RegisterFail     = "注册失败"
-	RegisterSucc     = "注册成功"
-	LoginSucc        = "登录成功"
+	PwdOldErr        = "旧密码不正确"
+	PwdOldNewSame    = "新密码与旧密码一致"
 
 	ParameterErrCode     = 10000
 	InsertDBErrCode      = 10001
@@ -59,10 +59,13 @@ const (
 	PassWordDiffCode     = 10016
 	UserNameExistsCode   = 10017
 	RegisterFailCode     = 10018
-	RegisterSuccCode     = 10019
-	LoginSuccCode        = 10020
+	PwdOldErrCode        = 10019
+	PwdOldNewSameCode    = 10020
 
-	Page            = 1           // 页数，第几页，默认值
-	PageSize        = 20          // 每页的数量，默认值
-	TokenExpiration = 60 * 60 * 6 // Token过期时间(默认6小时)
+	RegisterSucc = "注册成功"
+	LoginSucc    = "登录成功"
+	InsertDBSucc = "数据添加成功"
+	DeleteDBSucc = "数据删除成功"
+	UpdateDBSucc = "数据修改成功"
+	SelectDBSucc = "数据查询成功"
 )

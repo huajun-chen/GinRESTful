@@ -12,20 +12,6 @@ import (
 	"strconv"
 )
 
-// NeedsUserInfo 定义结构体存储需要返回的用户数据
-// values里的数据除了ID是int类型，其他的都是字符串类型，返回的字段不一定全部都是数据库的字段
-// 也有可能是数据库字段之间计算之后的值，所以返回的数据结构体单独定义
-type NeedsUserInfo struct {
-	ID        int    `json:"id"`
-	CreatedAt string `json:"created_at"`
-	UserName  string `json:"user_name"`
-	Gender    string `json:"gender"`
-	Desc      string `json:"desc"`
-	Role      string `json:"role"`
-	Mobile    string `json:"mobile"`
-	Email     string `json:"email"`
-}
-
 // Register 注册用户
 func Register(c *gin.Context) {
 	registerForm := forms.RegisterForm{}
@@ -47,7 +33,7 @@ func Register(c *gin.Context) {
 		}
 	}
 	// 判断用户名是否存在
-	_, ok := dao.FindUserInfo(registerForm.UserName)
+	_, ok := dao.DaoFindUserInfoToUserName(registerForm.UserName)
 	if ok {
 		response.Response(c, response.ResponseStruct{
 			Code: global.UserNameExistsCode,
@@ -70,7 +56,7 @@ func Register(c *gin.Context) {
 		UserName: registerForm.UserName,
 		Password: pwd,
 	}
-	userId, err := dao.RegisterUser(insterUserInfo)
+	userId, err := dao.DaoRegisterUser(insterUserInfo)
 	if err != nil {
 		response.Response(c, response.ResponseStruct{
 			Code: global.RegisterFailCode,
@@ -85,7 +71,7 @@ func Register(c *gin.Context) {
 	data["name"] = insterUserInfo.UserName
 	data["token"] = token
 	response.Response(c, response.ResponseStruct{
-		Code: global.RegisterSuccCode,
+		Code: http.StatusOK,
 		Msg:  global.RegisterSucc,
 		Data: data,
 	})
@@ -112,7 +98,7 @@ func Login(c *gin.Context) {
 		}
 	}
 	// 查询用户是否存在
-	userInfo, ok := dao.FindUserInfo(loginForm.UserName)
+	userInfo, ok := dao.DaoFindUserInfoToUserName(loginForm.UserName)
 	if !ok {
 		response.Response(c, response.ResponseStruct{
 			Code: global.NotRegisteredCode,
@@ -135,8 +121,44 @@ func Login(c *gin.Context) {
 	data["name"] = userInfo.UserName
 	data["token"] = token
 	response.Response(c, response.ResponseStruct{
-		Code: global.LoginSuccCode,
+		Code: http.StatusOK,
 		Msg:  global.LoginSucc,
+		Data: data,
+	})
+}
+
+// GetMyselfInfo 获取用户自己的信息
+func GetMyselfInfo(c *gin.Context) {
+	// 从参数中获取用户ID
+	userId := forms.IdForm{}
+	if err := c.ShouldBindUri(&userId); err != nil {
+		utils.HandleValidatorError(c, err)
+		return
+	}
+	// 判断是本人，不能获取别人的用户信息
+	tokenUserId, _ := c.Get("userId")
+	if tokenUserId != userId.ID {
+		response.Response(c, response.ResponseStruct{
+			Code: global.AuthInsufficientCode,
+			Msg:  global.AuthInsufficient,
+		})
+		return
+	}
+
+	// 通过用户ID获取用户信息
+	myselfInfo, _ := dao.DaoFindUserInfoToId(userId.ID)
+	data := forms.NeedsUserInfo{
+		ID:        int(myselfInfo.ID),
+		CreatedAt: myselfInfo.CreatedAt.Format("2006-01-02"),
+		UserName:  myselfInfo.UserName,
+		Gender:    strconv.Itoa(myselfInfo.Gender),
+		Desc:      myselfInfo.Desc,
+		Role:      strconv.Itoa(myselfInfo.Role),
+		Mobile:    myselfInfo.Mobile,
+		Email:     myselfInfo.Email,
+	}
+	response.Response(c, response.ResponseStruct{
+		Code: http.StatusOK,
 		Data: data,
 	})
 }
@@ -151,7 +173,7 @@ func GetUserList(c *gin.Context) {
 	}
 	// 获取数据
 	page, pageSize := utils.PageZero(userListForm.Page, userListForm.PageSize)
-	total, userList, err := dao.GetUserListDao(page, pageSize)
+	total, userList, err := dao.DaoGetUserList(page, pageSize)
 	if err != nil {
 		response.Response(c, response.ResponseStruct{
 			Code: global.SelectDBErrCode,
@@ -168,9 +190,9 @@ func GetUserList(c *gin.Context) {
 		return
 	}
 	// 过滤用户列表，只返回需要的数据
-	var values []NeedsUserInfo
+	var values []forms.NeedsUserInfo
 	for _, u := range userList {
-		needUserInfo := NeedsUserInfo{
+		needUserInfo := forms.NeedsUserInfo{
 			ID:        int(u.ID),
 			CreatedAt: u.CreatedAt.Format("2006-01-02"),
 			UserName:  u.UserName,
@@ -189,5 +211,109 @@ func GetUserList(c *gin.Context) {
 	response.Response(c, response.ResponseStruct{
 		Code: http.StatusOK,
 		Data: data,
+	})
+}
+
+// ModifyUserInfo 修改用户信息
+func ModifyUserInfo(c *gin.Context) {
+	// 获取需要修改的用户ID
+	userId := forms.IdForm{}
+	if err := c.ShouldBindUri(&userId); err != nil {
+		utils.HandleValidatorError(c, err)
+		return
+	}
+	// 获取需要修改的字段的参数
+	modUserInfoForm := forms.ModifyUserInfoForm{}
+	if err := c.ShouldBindJSON(&modUserInfoForm); err != nil {
+		utils.HandleValidatorError(c, err)
+		return
+	}
+
+	// 判断是否是本人，只能修改自己的信息
+	tokenUserId, _ := c.Get("userId")
+	if tokenUserId != userId.ID {
+		response.Response(c, response.ResponseStruct{
+			Code: global.UpdateDBErrCode,
+			Msg:  global.UpdateDBErr,
+		})
+		return
+	}
+	// 定义models.User接收需要修改的字段和对应的值
+	userMod := models.User{}
+
+	// 如果有修改密码，需要对密码进行判断
+	if modUserInfoForm.PasswordOld != "" && modUserInfoForm.Password != "" {
+		// 判断旧密码是否正确
+		userInfo, _ := dao.DaoFindUserInfoToId(userId.ID)
+		pwdBool := utils.CheckPassword(userInfo.Password, modUserInfoForm.PasswordOld)
+		if !pwdBool {
+			response.Response(c, response.ResponseStruct{
+				Code: global.PwdOldErrCode,
+				Msg:  global.PwdOldErr,
+			})
+			return
+		}
+		// 判断旧密码与新密码是否一致
+		if modUserInfoForm.PasswordOld == modUserInfoForm.Password {
+			response.Response(c, response.ResponseStruct{
+				Code: global.PwdOldNewSameCode,
+				Msg:  global.PwdOldNewSame,
+			})
+			return
+		}
+		// 判断修改后的两个密码密码是否一致
+		if modUserInfoForm.Password != modUserInfoForm.Password2 {
+			response.Response(c, response.ResponseStruct{
+				Code: global.PassWordDiffCode,
+				Msg:  global.PassWordDiff,
+			})
+			return
+		}
+		// 密码加密
+		pwdStr, _ := utils.SetPassword(modUserInfoForm.Password)
+		// 如果有密码修改，才将密码更新，否则不更新（json的参数没对密码做太多的限制，避免恶意传参）
+		userMod.Password = pwdStr
+	}
+
+	// 更新
+	userMod.Gender = modUserInfoForm.Gender
+	userMod.Desc = modUserInfoForm.Desc
+	userMod.Mobile = modUserInfoForm.Mobile
+	userMod.Email = modUserInfoForm.Email
+	if err := dao.DaoModifyUserInfo(userId.ID, userMod); err != nil {
+		response.Response(c, response.ResponseStruct{
+			Code: global.UpdateDBErrCode,
+			Msg:  global.UpdateDBErr,
+		})
+		return
+	}
+	response.Response(c, response.ResponseStruct{
+		Code: http.StatusOK,
+		Msg:  global.UpdateDBSucc,
+	})
+}
+
+// DelUser 删除用户信息（需要权限）
+func DelUser(c *gin.Context) {
+	// 从参数中获取用户ID
+	userId := forms.IdForm{}
+	if err := c.ShouldBindUri(&userId); err != nil {
+		utils.HandleValidatorError(c, err)
+		return
+	}
+
+	userMod := models.User{ID: userId.ID}
+	// 删除用户
+	err := dao.DaoDelUserToPriKey(userMod)
+	if err != nil {
+		response.Response(c, response.ResponseStruct{
+			Code: global.DeleteDBErrCode,
+			Msg:  global.DeleteDBErr,
+		})
+		return
+	}
+	response.Response(c, response.ResponseStruct{
+		Code: http.StatusOK,
+		Msg:  global.DeleteDBSucc,
 	})
 }
