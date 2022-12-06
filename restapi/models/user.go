@@ -21,6 +21,10 @@ type User struct {
 }
 
 // TableName 自定义表名
+// 参数：
+//		无
+// 返回值：
+//		string：表名
 func (User) TableName() string {
 	return "user"
 }

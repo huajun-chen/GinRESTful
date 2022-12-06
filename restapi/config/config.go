@@ -2,16 +2,16 @@ package config
 
 // ServerConfig 服务配置
 type ServerConfig struct {
-	Name      string      `mapstructure:"name"` // 项目名
-	Port      int         `mapstructure:"port"` // 端口
-	Page      int         `json:"page"`         // 页数/第几页
-	PageSize  int         `json:"pageSize"`     // 每页的数量
-	MysqlInfo MysqlConfig `mapstructure:"mysql"`
-	RedisInfo RedisConfig `mapstructure:"redis"`
-	LogsInfo  LogConfig   `mapstructure:"logs"`
-	JWTKey    JWTConfig   `mapstructure:"jwt"`
-	AdminInfo AdminConfig `mapstructure:"adminaccount"`
-	UserInfo  UserConfig  `mapstructure:"user"`
+	Name      string      `mapstructure:"name"`         // 项目名
+	Port      int         `mapstructure:"port"`         // 端口
+	Page      int         `json:"page"`                 // 页数/第几页
+	PageSize  int         `json:"pageSize"`             // 每页的数量
+	MysqlInfo MysqlConfig `mapstructure:"mysql"`        // MySQL配置
+	RedisInfo RedisConfig `mapstructure:"redis"`        // Redis配置
+	LogsInfo  LogConfig   `mapstructure:"logs"`         // 日志配置
+	JWTKey    JWTConfig   `mapstructure:"jwt"`          // JWT配置
+	AdminInfo AdminConfig `mapstructure:"adminaccount"` // 管理员账户配置
+	UserInfo  UserConfig  `mapstructure:"user"`         // 用户信息配置
 }
 
 // LogConfig 日志配置
@@ -37,12 +37,12 @@ type MysqlConfig struct {
 
 // RedisConfig Redis配置
 type RedisConfig struct {
-	Host     string `mapstructure:"host"`
-	Port     int    `mapstructure:"port"`
-	Password string `mapstructure:"password"`
+	Host     string `mapstructure:"host"`     // 缓存数据库地址
+	Port     int    `mapstructure:"port"`     // 端口
+	Password string `mapstructure:"password"` // 密码
 }
 
-// JWTConfig JWT签名密钥
+// JWTConfig JWT配置
 type JWTConfig struct {
 	SigningKey      string `mapstructure:"key"`             // Token密钥
 	TokenExpiration int    `mapstructure:"tokenExpiration"` // Token过期时间（默认6小时，60*60*6=21600）
@@ -50,8 +50,8 @@ type JWTConfig struct {
 
 // AdminConfig 管理员账户配置
 type AdminConfig struct {
-	UserName string `mapstructure:"userName"`
-	Password string `mapstructure:"password"`
+	UserName string `mapstructure:"userName"` // 默认用户的用户名
+	Password string `mapstructure:"password"` // 默认用户的密码
 }
 
 // UserConfig 用户信息配置

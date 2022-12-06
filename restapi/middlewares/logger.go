@@ -14,6 +14,10 @@ import (
 )
 
 // GinLogger 接收gin框架默认的日志
+// 参数：
+//		无
+// 返回值：
+//		gin.HandlerFunc：Gin的处理程序
 func GinLogger() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		start := time.Now()
@@ -31,6 +35,10 @@ func GinLogger() gin.HandlerFunc {
 }
 
 // GinRecovery recover项目可能出现的panic，并使用zap记录相关日志
+// 参数：
+//		无
+// 返回值：
+//		gin.HandlerFunc：Gin的处理程序
 func GinRecovery(stack bool) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		defer func() {

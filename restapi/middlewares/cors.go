@@ -6,6 +6,10 @@ import (
 )
 
 // Cors 跨域中间件
+// 参数：
+//		无
+// 返回值：
+//		gin.HandlerFunc：Gin的处理程序
 func Cors() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		method := c.Request.Method

@@ -6,6 +6,11 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// IsAdminAuth 用户权限中间件
+// 参数：
+//		无
+// 返回值：
+//		gin.HandlerFunc：Gin的处理程序
 func IsAdminAuth() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// 获取Token信息

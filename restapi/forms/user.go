@@ -10,12 +10,12 @@ type LoginForm struct {
 
 // UserListForm 用户列表参数
 type UserListForm struct {
-	PageForm
+	PageForm // 页数，每页数量
 }
 
 // RegisterForm 用户注册
 type RegisterForm struct {
-	LoginForm
+	LoginForm        // 用户登录需要的参数
 	Password2 string `json:"password2" binding:"required,min=8,max=64"` // 重复密码
 }
 

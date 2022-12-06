@@ -6,6 +6,11 @@ import (
 	"github.com/spf13/viper"
 )
 
+// InitConfig 初始化配置信息
+// 参数：
+//		无
+// 返回值：
+//		无
 func InitConfig() {
 	// 实例化viper
 	v := viper.New()

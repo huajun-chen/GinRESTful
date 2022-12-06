@@ -9,6 +9,11 @@ import (
 )
 
 // HandleValidatorError 处理字段校验异常
+// 参数：
+//		无
+// 返回值：
+//		c：gin.Context的指针
+//		err：错误信息
 func HandleValidatorError(c *gin.Context, err error) {
 	//如何返回错误信息
 	errs, ok := err.(validator.ValidationErrors)
@@ -29,6 +34,10 @@ func HandleValidatorError(c *gin.Context, err error) {
 }
 
 // removeTopStruct 定义一个去掉结构体名称前缀的自定义方法
+// 参数：
+//		fileds：原始字段的Map
+// 返回值：
+//		map[string]string：处理后的Map
 func removeTopStruct(fileds map[string]string) map[string]string {
 	rsp := map[string]string{}
 	for filed, err := range fileds {

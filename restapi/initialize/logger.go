@@ -17,6 +17,10 @@ type StructGetLogWriter struct {
 }
 
 // InitLogger 初始化Logger
+// 参数：
+//		无
+// 返回值：
+//		无
 func InitLogger() {
 	lg := global.Lg
 	logInfo := global.Settings.LogsInfo
@@ -42,6 +46,10 @@ func InitLogger() {
 }
 
 // getEncoder 获取编码器
+// 参数：
+//		无
+// 返回值：
+//		zapcore.Encoder：zap的编码器
 func getEncoder() zapcore.Encoder {
 	encoderConfig := zap.NewProductionEncoderConfig()
 	encoderConfig.EncodeTime = zapcore.ISO8601TimeEncoder
@@ -53,6 +61,10 @@ func getEncoder() zapcore.Encoder {
 }
 
 // getLogWriter 日志写入器
+// 参数：
+//		stGeWr：Log编写器
+// 返回值：
+//		zapcore.WriteSyncer：写同步器
 func getLogWriter(stGeWr StructGetLogWriter) zapcore.WriteSyncer {
 	lumberJackLogger := &lumberjack.Logger{
 		Filename:   stGeWr.FileName,
