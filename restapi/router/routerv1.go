@@ -31,6 +31,7 @@ func Routerv1(r *gin.RouterGroup) {
 		userRouterToken.Use(middlewares.JWTAuth())
 		userRouterToken.PUT("/info/:id", controller.ModifyUserInfo) // 修改用户信息
 		userRouterToken.GET("/info/:id", controller.GetMyselfInfo)  // 用户查看自己的信息
+		userRouterToken.DELETE("/logout", controller.Logout)        // 登出
 		// 需要Token和权限的接口
 		{
 			userRouterTokenAdmin := userRouterToken.Group("")

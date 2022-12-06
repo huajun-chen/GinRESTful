@@ -135,6 +135,18 @@ func Login(c *gin.Context) {
 	})
 }
 
+// Logout 用户登出
+// 参数：
+//		c *gin.Context：gin.Context的指针
+// 返回值：
+//		无
+func Logout(c *gin.Context) {
+	response.Response(c, response.ResponseStruct{
+		Code: http.StatusOK,
+		Msg:  global.LogoutSucc,
+	})
+}
+
 // GetMyselfInfo 获取用户自己的信息
 // 参数：
 //		c *gin.Context：gin.Context的指针
