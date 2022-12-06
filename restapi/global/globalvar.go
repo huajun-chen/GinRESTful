@@ -68,8 +68,4 @@ const (
 	DeleteDBSucc = "数据删除成功"
 	UpdateDBSucc = "数据修改成功"
 	SelectDBSucc = "数据查询成功"
-
-	Page            = 1           // 页数，第几页，默认值
-	PageSize        = 20          // 每页的数量，默认值
-	TokenExpiration = 60 * 60 * 6 // Token过期时间(默认6小时)
 )

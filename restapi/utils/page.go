@@ -5,8 +5,8 @@ import "GinRESTful/restapi/global"
 // PageZero 判断page和page_size参数是否为0
 func PageZero(page, pageSize int) (int, int) {
 	if page == 0 || pageSize == 0 {
-		page = global.Page
-		pageSize = global.PageSize
+		page = global.Settings.Page
+		pageSize = global.Settings.PageSize
 	}
 	return page, pageSize
 }
