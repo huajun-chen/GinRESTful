@@ -6,6 +6,7 @@ import (
 	"errors"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
+	"strings"
 	"time"
 )
 
@@ -35,11 +36,11 @@ type JWT struct {
 //		gin.HandlerFunc：Gin的处理程序
 func JWTAuth() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		// 我们这里jwt鉴权取头部信息 x-token 登录时回返回token信息
+		// 我们这里jwt鉴权取头部信息Authorization登录时回返回token信息
 		// 这里前端需要把token存储到cookie或者本地localSstorage中
 		// 不过需要跟后端协商过期时间 可以约定刷新令牌或者重新登录
-		token := c.Request.Header.Get("x-token")
-		if token == "" {
+		authorization := c.Request.Header.Get("Authorization")
+		if authorization == "" {
 			response.Response(c, response.ResponseStruct{
 				Code: global.NoTokenCode,
 				Msg:  global.NoToken,
@@ -47,9 +48,20 @@ func JWTAuth() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
+		// 按空格分隔Authorization内容（Bearer token信息）
+		bearerToken := strings.Split(authorization, " ")
+		if len(bearerToken) != 2 || bearerToken[0] != "Bearer" {
+			response.Response(c, response.ResponseStruct{
+				Code: global.InvalidTokenCode,
+				Msg:  global.InvalidToken,
+			})
+			c.Abort()
+			return
+		}
+
 		j := NewJWT()
 		// 解析Token信息
-		claims, err := j.ParseToken(token)
+		claims, err := j.ParseToken(bearerToken[1])
 		if err != nil {
 			if err == TokenExpired {
 				response.Response(c, response.ResponseStruct{
