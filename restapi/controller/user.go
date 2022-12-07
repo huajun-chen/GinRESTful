@@ -4,7 +4,6 @@ import (
 	"GinRESTful/restapi/dao"
 	"GinRESTful/restapi/forms"
 	"GinRESTful/restapi/global"
-	"GinRESTful/restapi/middlewares"
 	"GinRESTful/restapi/models"
 	"GinRESTful/restapi/response"
 	"GinRESTful/restapi/utils"
@@ -153,14 +152,14 @@ func Logout(c *gin.Context) {
 	// 计算Token剩余的时间（Token到期时间戳 - 当前时间戳）
 	timeLeft := time.Duration(tokenExpiresAt.(int64)-time.Now().Unix()) * time.Second
 	// 计算Token MD5值
-	tokenMD5 := middlewares.MD5(tokenStr.(string))
+	tokenMD5 := utils.MD5(tokenStr.(string))
 	// 将Key（Token MD5值），value（用户ID），到期时间（Token剩余的时间）加入Redis
 	// 延迟10秒执行，避免此用户的其他请求还未返回Token就失效
 	go func() {
 		time.Sleep(10 * time.Second)
-		err := global.Redis.Set(tokenMD5, userId, timeLeft).Err()
+		err := utils.RedisSetStr(tokenMD5, userId, timeLeft)
 		if err != nil {
-			// 记录日志
+			// Set Redis 错误的话，只记录日志
 			zap.L().Error("token Set Redis faild", zap.String("Redis Set", tokenStr.(string)))
 		}
 	}()

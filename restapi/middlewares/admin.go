@@ -3,6 +3,7 @@ package middlewares
 import (
 	"GinRESTful/restapi/global"
 	"GinRESTful/restapi/response"
+	"GinRESTful/restapi/utils"
 	"github.com/gin-gonic/gin"
 )
 
@@ -16,7 +17,7 @@ func IsAdminAuth() gin.HandlerFunc {
 		// 获取Token信息
 		claims, _ := c.Get("claims")
 		// 获取当前用户信息
-		currentUser := claims.(*CustomClaims)
+		currentUser := claims.(*utils.CustomClaims)
 		// 判断是否具有权限
 		if currentUser.AuthorityID != 1 {
 			response.Response(c, response.ResponseStruct{

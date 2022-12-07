@@ -26,6 +26,7 @@
 - 对用户/前端提交的参数进行校验
 - `Token`黑名单，用户退出登录后10秒，将此`Token`加入`Redis`的黑名单中，此`Token`不能继续使用
 - 后端响应返回的数据格式风格统一
+- 服务优雅关机
 
 ### 项目目录
 
@@ -51,7 +52,7 @@
 | response         | 统一封装response                     | response.go：对后端返回的数据格式进行统一封装                |
 | router           | 路由                                 | routerv1.go：V1版本路由                                      |
 | static           | 资源文件夹                           | 存放静态资源的目录                                           |
-| utils            | 工具                                 | createtoken.go：生成Token<br>migration.go：执行main启动项目时对数据库表新建或迁移<br>page.go：与页数，每页的数量相关的代码封装<br>password.go：密码加密与密码校验<br>validator.go：参数校验出现错误时代码统一封装 |
+| utils            | 工具                                 | jwt.go：Token相关的函数/方法<br>md5.go：MD5计算<br>migration.go：执行main启动项目时对数据库表新建或迁移<br>page.go：与页数，每页的数量相关的代码封装<br>password.go：密码加密与密码校验<br>redis.go：与Redis操作相关的方法<br>validator.go：参数校验出现错误时代码统一封装 |
 | main.go          | 程序入口文件/主程序                  |                                                              |
 | README.md        | 后端Readme文件                       |                                                              |
 | setting-dev.yaml | 配置文件                             |                                                              |
