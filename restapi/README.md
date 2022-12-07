@@ -6,16 +6,26 @@
 
 后端项目基本情况如下：
 
-| 技术栈    | 概述                     |
-| --------- | ------------------------ |
-| Viper     | 配置管理                 |
-| Zap       | 日志管理                 |
-| Validator | 参数字段校验             |
-| GORM      | 数据库ORM                |
-| Redis     | 缓存数据库               |
-| JWT       | 生成Token，登录验证Token |
-| Docker    | 服务基于Docker部署       |
+| 技术栈    | 概述                                                         |
+| --------- | ------------------------------------------------------------ |
+| Viper     | 配置管理                                                     |
+| Zap       | 日志管理                                                     |
+| Validator | 参数字段校验                                                 |
+| GORM      | 数据库ORM                                                    |
+| Redis     | 缓存数据库，Token黑名单，退出登录10秒后此Token不能再正常使用 |
+| JWT       | 生成Token，登录验证Token                                     |
+| Docker    | 服务基于Docker部署                                           |
 
+### 实现功能
+
+- 初始化`YAML`配置文件、初始化日志信息、初始化参数校验翻译、初始化`MySQL`、初始化`Redis`、初始化一个`admin`账户
+- 实现用户注册，用户登录，修改用户信息、查看用户信息、登出、`admin`账户查看用户列表、`admin`用户删除用户信息
+- 用户权限中间件、跨域中间件、`JWT`中间件、日志中间件
+- 日志文件分割归档
+- 用户注册、用户登录需要验证码
+- 对用户/前端提交的参数进行校验
+- `Token`黑名单，用户退出登录后10秒，将此`Token`加入`Redis`的黑名单中，此`Token`不能继续使用
+- 后端响应返回的数据格式风格统一
 
 ### 项目目录
 
@@ -34,7 +44,7 @@
 | dao              | 操作数据库，给业务controller提供数据 | user.go：用户模块数据库操作                                  |
 | forms            | 字段验证的struct                     | base.go：基础的参数对应的struct<br>user.go：用户模块参数，返回的数据结构对应的struct定义 |
 | global           | 定义全局变量                         | globalvar.go：定义后端项目的全局变量                         |
-| initialize       | 服务初始化                           | account.go：初始化一个admin账号<br>config.go：使用Viper初始化获取配置文件<br>logger.go：使用zap初始化项目日志<br>mysql.go：使用GORM初始化MYSQL数据库<br>redis.go：初始化Redis缓存数据库<br>router.go：初始化项目的路由<br>validator.go：使用Validator初始化参数校验，参数校验信息中英文翻译 |
+| initialize       | 服务初始化                           | account.go：初始化一个admin账号<br>config.go：使用Viper初始化获取配置文件<br>logger.go：使用zap初始化项目日志<br>mysql.go：使用GORM初始化MYSQL数据库<br>redis.go：初始化Redis缓存数据库<br>router.go：初始化项目的路由<br>runserver.go：运行Gin服务，实现优雅关机<br>validator.go：使用Validator初始化参数校验，参数校验信息中英文翻译 |
 | logs             | 日志存储                             | 存储每天的日志文件                                           |
 | middlewares      | 中间件                               | admin.go：权限相关的中间件<br>cors.go：跨域中间件<br>jwt.go：JWT验证中间件<br>logger.go：日志中间件 |
 | models           | 数据库字段定义                       | user.go：用户模块的数据库字段                                |
@@ -143,11 +153,9 @@ func DaoFindUserInfoToId(userId uint) (*models.User, bool) {
 }
 ```
 
+### API接口文档
 
-
-
-
-
+详情见`docs`目录下`API接口文档`
 
 
 
