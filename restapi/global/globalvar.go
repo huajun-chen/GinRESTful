@@ -64,6 +64,7 @@ const (
 
 	RegisterSucc = "注册成功"
 	LoginSucc    = "登录成功"
+	LogoutSucc   = "登出成功"
 	InsertDBSucc = "数据添加成功"
 	DeleteDBSucc = "数据删除成功"
 	UpdateDBSucc = "数据修改成功"

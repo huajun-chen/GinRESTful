@@ -4,12 +4,15 @@ import (
 	"GinRESTful/restapi/dao"
 	"GinRESTful/restapi/forms"
 	"GinRESTful/restapi/global"
+	"GinRESTful/restapi/middlewares"
 	"GinRESTful/restapi/models"
 	"GinRESTful/restapi/response"
 	"GinRESTful/restapi/utils"
 	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
 	"net/http"
 	"strconv"
+	"time"
 )
 
 // Register 注册用户
@@ -68,7 +71,7 @@ func Register(c *gin.Context) {
 		})
 		return
 	}
-	// 获取Token
+	// 生成新的Token
 	token := utils.CreateToken(c, userId, 2, insterUserInfo.UserName)
 	data := make(map[string]interface{})
 	data["id"] = userId
@@ -132,6 +135,39 @@ func Login(c *gin.Context) {
 		Code: http.StatusOK,
 		Msg:  global.LoginSucc,
 		Data: data,
+	})
+}
+
+// Logout 用户登出
+// 参数：
+//		c *gin.Context：gin.Context的指针
+// 返回值：
+//		无
+func Logout(c *gin.Context) {
+	// 获取Token
+	tokenStr, _ := c.Get("token")
+	// 获取用户ID
+	userId, _ := c.Get("userId")
+	// 获取Token到期时间
+	tokenExpiresAt, _ := c.Get("tokenExpiresAt")
+	// 计算Token剩余的时间（Token到期时间戳 - 当前时间戳）
+	timeLeft := time.Duration(tokenExpiresAt.(int64)-time.Now().Unix()) * time.Second
+	// 计算Token MD5值
+	tokenMD5 := middlewares.MD5(tokenStr.(string))
+	// 将Key（Token MD5值），value（用户ID），到期时间（Token剩余的时间）加入Redis
+	// 延迟10秒执行，避免此用户的其他请求还未返回Token就失效
+	go func() {
+		time.Sleep(10 * time.Second)
+		err := global.Redis.Set(tokenMD5, userId, timeLeft).Err()
+		if err != nil {
+			// 记录日志
+			zap.L().Error("token Set Redis faild", zap.String("Redis Set", tokenStr.(string)))
+		}
+	}()
+
+	response.Response(c, response.ResponseStruct{
+		Code: http.StatusOK,
+		Msg:  global.LogoutSucc,
 	})
 }
 

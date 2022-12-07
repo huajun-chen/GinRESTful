@@ -3,9 +3,12 @@ package middlewares
 import (
 	"GinRESTful/restapi/global"
 	"GinRESTful/restapi/response"
+	"crypto/md5"
+	"encoding/hex"
 	"errors"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
+	"strings"
 	"time"
 )
 
@@ -35,11 +38,11 @@ type JWT struct {
 //		gin.HandlerFunc：Gin的处理程序
 func JWTAuth() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		// 我们这里jwt鉴权取头部信息 x-token 登录时回返回token信息
+		// 我们这里jwt鉴权取头部信息Authorization登录时回返回token信息
 		// 这里前端需要把token存储到cookie或者本地localSstorage中
 		// 不过需要跟后端协商过期时间 可以约定刷新令牌或者重新登录
-		token := c.Request.Header.Get("x-token")
-		if token == "" {
+		authorization := c.Request.Header.Get("Authorization")
+		if authorization == "" {
 			response.Response(c, response.ResponseStruct{
 				Code: global.NoTokenCode,
 				Msg:  global.NoToken,
@@ -47,9 +50,20 @@ func JWTAuth() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
+		// 按空格分隔Authorization内容（Bearer token信息）
+		bearerToken := strings.Split(authorization, " ")
+		if len(bearerToken) != 2 || bearerToken[0] != "Bearer" {
+			response.Response(c, response.ResponseStruct{
+				Code: global.InvalidTokenCode,
+				Msg:  global.InvalidToken,
+			})
+			c.Abort()
+			return
+		}
+
 		j := NewJWT()
 		// 解析Token信息
-		claims, err := j.ParseToken(token)
+		claims, err := j.ParseToken(bearerToken[1])
 		if err != nil {
 			if err == TokenExpired {
 				response.Response(c, response.ResponseStruct{
@@ -66,9 +80,25 @@ func JWTAuth() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
-		// Gin的上下文记录claims和userId的值
+		// 判断Token是否在黑名单中（true：在，false不在）
+		ok := IsInBlacklist(bearerToken[1])
+		if ok {
+			response.Response(c, response.ResponseStruct{
+				Code: global.InvalidTokenCode,
+				Msg:  global.InvalidToken, // Token在黑名单中，定义为失效
+			})
+			c.Abort()
+			return
+		}
+
+		// Gin的上下文记录claims
 		c.Set("claims", claims)
+		// 用户ID
 		c.Set("userId", claims.ID)
+		// 用户Token
+		c.Set("token", bearerToken[1])
+		// Token到期时间戳
+		c.Set("tokenExpiresAt", claims.ExpiresAt)
 		c.Next()
 	}
 }
@@ -148,4 +178,29 @@ func (j *JWT) RefreshToken(tokenString string) (string, error) {
 		return j.CreateToken(*claims)
 	}
 	return "", TokenInvalid
+}
+
+// MD5 计算字符串的MD5值，参考链接：https://wangbjun.site/2020/coding/golang/md5.html
+// 参数：
+//		str：需要MD5的字符串
+// 返回值：
+//		string：MD5之后的字符串
+func MD5(str string) string {
+	sum := md5.Sum([]byte(str))
+	return hex.EncodeToString(sum[:])
+}
+
+// IsInBlacklist 判断Token是否在黑名单中（true：在，false不在）
+// 参数：
+//		tokenStr：Token字符串
+// 返回值：
+//		bool：Token是否在黑名单里，true：在，false不在
+func IsInBlacklist(tokenStr string) bool {
+	tokenMD5 := MD5(tokenStr)
+	value, _ := global.Redis.Get(tokenMD5).Result()
+	// 如果在Redis中通过key获取的值为空，说明此Token未加入黑名单
+	if value == "" {
+		return false
+	}
+	return true
 }
