@@ -36,6 +36,8 @@ adminaccount:
 user:
   pwdEncDiff: 16
   captchaLogin: true
+  ipFrequency: 100
+  timeLimit: 1
 
 language:
   languageType: "zh-CN"

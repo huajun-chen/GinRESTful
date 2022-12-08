@@ -59,6 +59,8 @@ type AdminConfig struct {
 type UserConfig struct {
 	PwdEncDiff   int  `mapstructure:"pwdEncDiff"`   // 密码加密难度（4~31，默认10）
 	CaptchaLogin bool `mapstructure:"captchaLogin"` // 是否开启验证码登录
+	IpFrequency  int  `json:"ipFrequency"`          // IP访问频率或者是次数
+	TimeLimit    int  `json:"timeLimit"`            // 时长（默认限制1分钟只能访问100次）
 }
 
 // LanguageCfg 语言相关配置

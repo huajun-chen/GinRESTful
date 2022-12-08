@@ -19,6 +19,8 @@ func InitRouter() *gin.Engine {
 	Router.Use(middlewares.GinLogger(), middlewares.GinRecovery(true))
 	// 注册i18n国际化中间件
 	Router.Use(middlewares.I18n())
+	// 限制IP访问频率中间件
+	Router.Use(middlewares.Frequency())
 	// 路由分组
 	APIGroup := Router.Group("/api")
 	{
