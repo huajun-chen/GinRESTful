@@ -32,8 +32,8 @@ func Register(c *gin.Context) {
 	if userSet.CaptchaLogin {
 		if !store.Verify(registerForm.CaptchaId, registerForm.Captcha, true) {
 			response.Response(c, response.ResponseStruct{
-				Code: global.CaptchaIncorCode,
-				Msg:  global.CaptchaIncor,
+				Code: 10008,
+				Msg:  global.I18nMap["10008"],
 			})
 			return
 		}
@@ -42,16 +42,16 @@ func Register(c *gin.Context) {
 	_, ok := dao.DaoFindUserInfoToUserName(registerForm.UserName)
 	if ok {
 		response.Response(c, response.ResponseStruct{
-			Code: global.UserNameExistsCode,
-			Msg:  global.UserNameExists,
+			Code: 10017,
+			Msg:  global.I18nMap["10017"],
 		})
 		return
 	}
 	// 两次密码是否一致
 	if registerForm.Password != registerForm.Password2 {
 		response.Response(c, response.ResponseStruct{
-			Code: global.PassWordDiffCode,
-			Msg:  global.PassWordDiff,
+			Code: 10016,
+			Msg:  global.I18nMap["10016"],
 		})
 		return
 	}
@@ -65,8 +65,8 @@ func Register(c *gin.Context) {
 	userId, err := dao.DaoRegisterUser(insterUserInfo)
 	if err != nil {
 		response.Response(c, response.ResponseStruct{
-			Code: global.RegisterFailCode,
-			Msg:  global.RegisterFail,
+			Code: 10018,
+			Msg:  global.I18nMap["10018"],
 		})
 		return
 	}
@@ -78,7 +78,7 @@ func Register(c *gin.Context) {
 	data["token"] = token
 	response.Response(c, response.ResponseStruct{
 		Code: http.StatusOK,
-		Msg:  global.RegisterSucc,
+		Msg:  global.I18nMap["2000"],
 		Data: data,
 	})
 }
@@ -101,8 +101,8 @@ func Login(c *gin.Context) {
 	if userSet.CaptchaLogin {
 		if !store.Verify(loginForm.CaptchaId, loginForm.Captcha, true) {
 			response.Response(c, response.ResponseStruct{
-				Code: global.CaptchaIncorCode,
-				Msg:  global.CaptchaIncor,
+				Code: 10008,
+				Msg:  global.I18nMap["10008"],
 			})
 			return
 		}
@@ -111,8 +111,8 @@ func Login(c *gin.Context) {
 	userInfo, ok := dao.DaoFindUserInfoToUserName(loginForm.UserName)
 	if !ok {
 		response.Response(c, response.ResponseStruct{
-			Code: global.NotRegisteredCode,
-			Msg:  global.NotRegistered,
+			Code: 10013,
+			Msg:  global.I18nMap["10013"],
 		})
 		return
 	}
@@ -120,8 +120,8 @@ func Login(c *gin.Context) {
 	pwdBool := utils.CheckPassword(userInfo.Password, loginForm.Password)
 	if !pwdBool {
 		response.Response(c, response.ResponseStruct{
-			Code: global.PassWordErrCode,
-			Msg:  global.PassWordErr,
+			Code: 10015,
+			Msg:  global.I18nMap["10015"],
 		})
 		return
 	}
@@ -132,7 +132,7 @@ func Login(c *gin.Context) {
 	data["token"] = token
 	response.Response(c, response.ResponseStruct{
 		Code: http.StatusOK,
-		Msg:  global.LoginSucc,
+		Msg:  global.I18nMap["2001"],
 		Data: data,
 	})
 }
@@ -166,7 +166,7 @@ func Logout(c *gin.Context) {
 
 	response.Response(c, response.ResponseStruct{
 		Code: http.StatusOK,
-		Msg:  global.LogoutSucc,
+		Msg:  global.I18nMap["2002"],
 	})
 }
 
@@ -186,8 +186,8 @@ func GetMyselfInfo(c *gin.Context) {
 	tokenUserId, _ := c.Get("userId")
 	if tokenUserId != userId.ID {
 		response.Response(c, response.ResponseStruct{
-			Code: global.AuthInsufficientCode,
-			Msg:  global.AuthInsufficient,
+			Code: 10014,
+			Msg:  global.I18nMap["10014"],
 		})
 		return
 	}
@@ -227,16 +227,16 @@ func GetUserList(c *gin.Context) {
 	total, userList, err := dao.DaoGetUserList(page, pageSize)
 	if err != nil {
 		response.Response(c, response.ResponseStruct{
-			Code: global.SelectDBErrCode,
-			Msg:  global.SelectDBErr,
+			Code: 10004,
+			Msg:  global.I18nMap["10004"],
 		})
 		return
 	}
 	// 获取数据为空
 	if total == 0 {
 		response.Response(c, response.ResponseStruct{
-			Code: global.DataEmptyCode,
-			Msg:  global.DataEmpty,
+			Code: 10005,
+			Msg:  global.I18nMap["10005"],
 		})
 		return
 	}
@@ -288,8 +288,8 @@ func ModifyUserInfo(c *gin.Context) {
 	tokenUserId, _ := c.Get("userId")
 	if tokenUserId != userId.ID {
 		response.Response(c, response.ResponseStruct{
-			Code: global.UpdateDBErrCode,
-			Msg:  global.UpdateDBErr,
+			Code: 10003,
+			Msg:  global.I18nMap["10003"],
 		})
 		return
 	}
@@ -303,24 +303,24 @@ func ModifyUserInfo(c *gin.Context) {
 		pwdBool := utils.CheckPassword(userInfo.Password, modUserInfoForm.PasswordOld)
 		if !pwdBool {
 			response.Response(c, response.ResponseStruct{
-				Code: global.PwdOldErrCode,
-				Msg:  global.PwdOldErr,
+				Code: 10019,
+				Msg:  global.I18nMap["10019"],
 			})
 			return
 		}
 		// 判断旧密码与新密码是否一致
 		if modUserInfoForm.PasswordOld == modUserInfoForm.Password {
 			response.Response(c, response.ResponseStruct{
-				Code: global.PwdOldNewSameCode,
-				Msg:  global.PwdOldNewSame,
+				Code: 10020,
+				Msg:  global.I18nMap["10020"],
 			})
 			return
 		}
 		// 判断修改后的两个密码密码是否一致
 		if modUserInfoForm.Password != modUserInfoForm.Password2 {
 			response.Response(c, response.ResponseStruct{
-				Code: global.PassWordDiffCode,
-				Msg:  global.PassWordDiff,
+				Code: 10016,
+				Msg:  global.I18nMap["10016"],
 			})
 			return
 		}
@@ -337,14 +337,14 @@ func ModifyUserInfo(c *gin.Context) {
 	userMod.Email = modUserInfoForm.Email
 	if err := dao.DaoModifyUserInfo(userId.ID, userMod); err != nil {
 		response.Response(c, response.ResponseStruct{
-			Code: global.UpdateDBErrCode,
-			Msg:  global.UpdateDBErr,
+			Code: 10003,
+			Msg:  global.I18nMap["10003"],
 		})
 		return
 	}
 	response.Response(c, response.ResponseStruct{
 		Code: http.StatusOK,
-		Msg:  global.UpdateDBSucc,
+		Msg:  global.I18nMap["2005"],
 	})
 }
 
@@ -366,13 +366,13 @@ func DelUser(c *gin.Context) {
 	err := dao.DaoDelUserToPriKey(userMod)
 	if err != nil {
 		response.Response(c, response.ResponseStruct{
-			Code: global.DeleteDBErrCode,
-			Msg:  global.DeleteDBErr,
+			Code: 10002,
+			Msg:  global.I18nMap["10002"],
 		})
 		return
 	}
 	response.Response(c, response.ResponseStruct{
 		Code: http.StatusOK,
-		Msg:  global.DeleteDBSucc,
+		Msg:  global.I18nMap["2004"],
 	})
 }

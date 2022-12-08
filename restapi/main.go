@@ -10,10 +10,8 @@ func main() {
 	initialize.InitConfig()
 	// 2.初始化日志信息
 	initialize.InitLogger()
-	// 3.初始化翻译
-	if err := initialize.InitTrans("zh"); err != nil {
-		panic(err)
-	}
+	// 3.初始化Validator参数校验结果翻译
+	initialize.InitTrans()
 	// 4.初始化MySQL
 	initialize.InitMysqlDB()
 	// 5.初始化Redis

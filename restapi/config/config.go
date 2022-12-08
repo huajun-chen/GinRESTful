@@ -4,8 +4,9 @@ package config
 type ServerConfig struct {
 	Name      string      `mapstructure:"name"`         // 项目名
 	Port      int         `mapstructure:"port"`         // 端口
-	Page      int         `json:"page"`                 // 页数/第几页
-	PageSize  int         `json:"pageSize"`             // 每页的数量
+	Page      int         `mapstructure:"page"`         // 页数/第几页
+	PageSize  int         `mapstructure:"pageSize"`     // 每页的数量
+	Language  LanguageCfg `mapstructure:"language"`     // 语言相关配置
 	MysqlInfo MysqlConfig `mapstructure:"mysql"`        // MySQL配置
 	RedisInfo RedisConfig `mapstructure:"redis"`        // Redis配置
 	LogsInfo  LogConfig   `mapstructure:"logs"`         // 日志配置
@@ -58,4 +59,11 @@ type AdminConfig struct {
 type UserConfig struct {
 	PwdEncDiff   int  `mapstructure:"pwdEncDiff"`   // 密码加密难度（4~31，默认10）
 	CaptchaLogin bool `mapstructure:"captchaLogin"` // 是否开启验证码登录
+}
+
+// LanguageCfg 语言相关配置
+type LanguageCfg struct {
+	LanguageType string `mapstructure:"languageType"` // 语言类型（默认中文）
+	Tranfilepath string `mapstructure:"tranfilepath"` // 翻译文件位置
+	AllLanguage  string `mapstructure:"allLanguage"`  // 项目会使用到的全部语言
 }

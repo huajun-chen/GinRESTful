@@ -23,10 +23,10 @@ func GetCaptcha(c *gin.Context) {
 	// bs64是图片的base64编码
 	id, bs64, err := cp.Generate()
 	if err != nil {
-		zap.S().Errorf("%s：%s", global.CaptchaErr, err.Error())
+		zap.S().Errorf("%s：%s", global.I18nMap["10007"], err.Error())
 		response.Response(c, response.ResponseStruct{
-			Code: global.CaptchaErrCode,
-			Msg:  global.CaptchaErr,
+			Code: 10007,
+			Msg:  global.I18nMap["10007"],
 		})
 		return
 	}

@@ -15,14 +15,12 @@ import (
 //		gin.HandlerFunc：Gin的处理程序
 func JWTAuth() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		// 我们这里jwt鉴权取头部信息Authorization登录时回返回token信息
-		// 这里前端需要把token存储到cookie或者本地localSstorage中
-		// 不过需要跟后端协商过期时间 可以约定刷新令牌或者重新登录
+		// jwt鉴权取头部信息Authorization登录时回返回token信息
 		authorization := c.Request.Header.Get("Authorization")
 		if authorization == "" {
 			response.Response(c, response.ResponseStruct{
-				Code: global.NoTokenCode,
-				Msg:  global.NoToken,
+				Code: 10009,
+				Msg:  global.I18nMap["10009"],
 			})
 			c.Abort()
 			return
@@ -31,8 +29,8 @@ func JWTAuth() gin.HandlerFunc {
 		bearerToken := strings.Split(authorization, " ")
 		if len(bearerToken) != 2 || bearerToken[0] != "Bearer" {
 			response.Response(c, response.ResponseStruct{
-				Code: global.InvalidTokenCode,
-				Msg:  global.InvalidToken,
+				Code: 10011,
+				Msg:  global.I18nMap["10011"],
 			})
 			c.Abort()
 			return
@@ -44,15 +42,15 @@ func JWTAuth() gin.HandlerFunc {
 		if err != nil {
 			if err == utils.TokenExpired {
 				response.Response(c, response.ResponseStruct{
-					Code: global.AuthExpiredCode,
-					Msg:  global.AuthExpired,
+					Code: 10010,
+					Msg:  global.I18nMap["10010"],
 				})
 				c.Abort()
 				return
 			}
 			response.Response(c, response.ResponseStruct{
-				Code: global.InvalidTokenCode,
-				Msg:  global.InvalidToken,
+				Code: 10011,
+				Msg:  global.I18nMap["10011"],
 			})
 			c.Abort()
 			return
@@ -61,8 +59,8 @@ func JWTAuth() gin.HandlerFunc {
 		ok := utils.IsInBlacklist(bearerToken[1])
 		if ok {
 			response.Response(c, response.ResponseStruct{
-				Code: global.InvalidTokenCode,
-				Msg:  global.InvalidToken, // Token在黑名单中，定义为失效
+				Code: 10011,
+				Msg:  global.I18nMap["10011"], // Token在黑名单中，定义为失效
 			})
 			c.Abort()
 			return
