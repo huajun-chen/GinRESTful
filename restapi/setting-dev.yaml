@@ -36,3 +36,8 @@ adminaccount:
 user:
   pwdEncDiff: 16
   captchaLogin: true
+
+language:
+  languageType: "zh-CN"
+  tranfilepath: "./static/i18n"
+  allLanguage: "zh-CN,en-US"

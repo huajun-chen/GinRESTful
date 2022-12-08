@@ -19,16 +19,16 @@ func HandleValidatorError(c *gin.Context, err error) {
 	errs, ok := err.(validator.ValidationErrors)
 	if !ok {
 		response.Response(c, response.ResponseStruct{
-			Code: global.ParameterErrCode,
-			Msg:  global.ParameterErr,
+			Code: 10000,
+			Msg:  global.I18nMap["10000"],
 			Data: err.Error(),
 		})
 		return
 	}
 	data := removeTopStruct(errs.Translate(global.Trans))
 	response.Response(c, response.ResponseStruct{
-		Code: global.ParameterErrCode,
-		Msg:  global.ParameterErr,
+		Code: 10000,
+		Msg:  global.I18nMap["10000"],
 		Data: data,
 	})
 }

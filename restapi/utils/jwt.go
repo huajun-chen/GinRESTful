@@ -53,8 +53,8 @@ func CreateToken(c *gin.Context, id uint, role int, name string) string {
 	token, err := j.CreateToken(claims)
 	if err != nil {
 		response.Response(c, response.ResponseStruct{
-			Code: global.CreateTokenFailCode,
-			Msg:  global.CreateTokenFail,
+			Code: 10012,
+			Msg:  global.I18nMap["10012"],
 		})
 		return ""
 	}

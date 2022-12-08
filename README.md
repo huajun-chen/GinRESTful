@@ -7,9 +7,11 @@
 ### 项目目录
 
 - docs：
-  - 项目文档目录；包含`API`接口文档等...
+  - 项目文档目录，包含`API`接口文档等...
+  - `API`接口文档：[点击跳转](https://github.com/huajun-chen/GinRESTful/blob/master/docs/API%E6%8E%A5%E5%8F%A3%E6%96%87%E6%A1%A3.md)
 - restapi：
   - 后端`API`接口目录
+  - 直达后端项目：[点击跳转](https://github.com/huajun-chen/GinRESTful/tree/master/restapi)
 - web：
   - 前端目录
 

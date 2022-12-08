@@ -27,6 +27,7 @@
 - `Token`黑名单，用户退出登录后10秒，将此`Token`加入`Redis`的黑名单中，此`Token`不能继续使用
 - 后端响应返回的数据格式风格统一
 - 服务优雅关机
+- i18n国际化翻译
 
 ### 项目目录
 
@@ -36,7 +37,7 @@
 
 目录说明：
 
-**备注**：<font color=Red>GitHub仓库缺少2个目录（logs、static），需要自己手动添加</font>
+**备注：GitHub仓库缺少个目录（logs），需要自己手动添加**
 
 | 文件/目录        | 概述                                 | 文件概述                                                     |
 | ---------------- | ------------------------------------ | ------------------------------------------------------------ |
@@ -47,12 +48,12 @@
 | global           | 定义全局变量                         | globalvar.go：定义后端项目的全局变量                         |
 | initialize       | 服务初始化                           | account.go：初始化一个admin账号<br>config.go：使用Viper初始化获取配置文件<br>logger.go：使用zap初始化项目日志<br>mysql.go：使用GORM初始化MYSQL数据库<br>redis.go：初始化Redis缓存数据库<br>router.go：初始化项目的路由<br>runserver.go：运行Gin服务，实现优雅关机<br>validator.go：使用Validator初始化参数校验，参数校验信息中英文翻译 |
 | logs             | 日志存储                             | 存储每天的日志文件                                           |
-| middlewares      | 中间件                               | admin.go：权限相关的中间件<br>cors.go：跨域中间件<br>jwt.go：JWT验证中间件<br>logger.go：日志中间件 |
+| middlewares      | 中间件                               | admin.go：权限相关的中间件<br>cors.go：跨域中间件<br>i18n.go：i18n国际化中间件<br>jwt.go：JWT验证中间件<br>logger.go：日志中间件 |
 | models           | 数据库字段定义                       | user.go：用户模块的数据库字段                                |
 | response         | 统一封装response                     | response.go：对后端返回的数据格式进行统一封装                |
 | router           | 路由                                 | routerv1.go：V1版本路由                                      |
-| static           | 资源文件夹                           | 存放静态资源的目录                                           |
-| utils            | 工具                                 | jwt.go：Token相关的函数/方法<br>md5.go：MD5计算<br>migration.go：执行main启动项目时对数据库表新建或迁移<br>page.go：与页数，每页的数量相关的代码封装<br>password.go：密码加密与密码校验<br>redis.go：与Redis操作相关的方法<br>validator.go：参数校验出现错误时代码统一封装 |
+| static           | 静态资源文件夹                       | i18n：存放i18n国际化翻译json文件                             |
+| utils            | 工具                                 | json.go：读取json文件，将其序列化为map<br>jwt.go：Token相关的函数/方法<br>md5.go：MD5计算<br>migration.go：执行main启动项目时对数据库表新建或迁移<br>page.go：与页数，每页的数量相关的代码封装<br>password.go：密码加密与密码校验<br>redis.go：与Redis操作相关的方法<br>validator.go：参数校验出现错误时代码统一封装 |
 | main.go          | 程序入口文件/主程序                  |                                                              |
 | README.md        | 后端Readme文件                       |                                                              |
 | setting-dev.yaml | 配置文件                             |                                                              |

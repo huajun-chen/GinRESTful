@@ -17,6 +17,8 @@ func InitRouter() *gin.Engine {
 	Router.Use(middlewares.Cors())
 	// 注册zap相关中间件
 	Router.Use(middlewares.GinLogger(), middlewares.GinRecovery(true))
+	// 注册i18n国际化中间件
+	Router.Use(middlewares.I18n())
 	// 路由分组
 	APIGroup := Router.Group("/api")
 	{
