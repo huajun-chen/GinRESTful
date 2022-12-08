@@ -15,7 +15,7 @@
   "10006": "Internal System Error",
   "10007": "Failed to Generate Verification Code",
   "10008": "Incorrect Verification Code",
-  "10009": "No token included in request, access denied. Please login first.",
+  "10009": "No token included in request, access denied, Please login first",
   "10010": "Token has Expired",
   "10011": "Invalid Token",
   "10012": "Failed to Generate Token",
@@ -26,5 +26,7 @@
   "10017": "Username Already Exists",
   "10018": "Registration Failed",
   "10019": "Incorrect Old Password",
-  "10020": "New Password is the Same as Old Password"
+  "10020": "New Password is the Same as Old Password",
+  "10021": "Request too frequent, please try again later",
+  "10022": "The current server is busy, please try again later"
 }

@@ -2,6 +2,8 @@ name: "GinRESTful"
 port: 8080
 page: 1
 pageSize: 20
+rateLimit: 10000
+rateLimitSwitch: false
 
 logs:
   level: "debug"
@@ -36,6 +38,8 @@ adminaccount:
 user:
   pwdEncDiff: 16
   captchaLogin: true
+  ipFrequency: 100
+  timeLimit: 1
 
 language:
   languageType: "zh-CN"

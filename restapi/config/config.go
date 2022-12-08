@@ -2,17 +2,19 @@ package config
 
 // ServerConfig 服务配置
 type ServerConfig struct {
-	Name      string      `mapstructure:"name"`         // 项目名
-	Port      int         `mapstructure:"port"`         // 端口
-	Page      int         `mapstructure:"page"`         // 页数/第几页
-	PageSize  int         `mapstructure:"pageSize"`     // 每页的数量
-	Language  LanguageCfg `mapstructure:"language"`     // 语言相关配置
-	MysqlInfo MysqlConfig `mapstructure:"mysql"`        // MySQL配置
-	RedisInfo RedisConfig `mapstructure:"redis"`        // Redis配置
-	LogsInfo  LogConfig   `mapstructure:"logs"`         // 日志配置
-	JWTKey    JWTConfig   `mapstructure:"jwt"`          // JWT配置
-	AdminInfo AdminConfig `mapstructure:"adminaccount"` // 管理员账户配置
-	UserInfo  UserConfig  `mapstructure:"user"`         // 用户信息配置
+	Name      string      `mapstructure:"name"`            // 项目名
+	Port      int         `mapstructure:"port"`            // 端口
+	Page      int         `mapstructure:"page"`            // 页数/第几页
+	PageSize  int         `mapstructure:"pageSize"`        // 每页的数量
+	RateLimit int         `mapstructure:"rateLimit"`       // 限制并发请求数量（每秒1万次请求）
+	RaLiSw    bool        `mapstructure:"rateLimitSwitch"` // 是否开启限流（默认关闭限流）
+	Language  LanguageCfg `mapstructure:"language"`        // 语言相关配置
+	MysqlInfo MysqlConfig `mapstructure:"mysql"`           // MySQL配置
+	RedisInfo RedisConfig `mapstructure:"redis"`           // Redis配置
+	LogsInfo  LogConfig   `mapstructure:"logs"`            // 日志配置
+	JWTKey    JWTConfig   `mapstructure:"jwt"`             // JWT配置
+	AdminInfo AdminConfig `mapstructure:"adminaccount"`    // 管理员账户配置
+	UserInfo  UserConfig  `mapstructure:"user"`            // 用户信息配置
 }
 
 // LogConfig 日志配置
@@ -59,6 +61,8 @@ type AdminConfig struct {
 type UserConfig struct {
 	PwdEncDiff   int  `mapstructure:"pwdEncDiff"`   // 密码加密难度（4~31，默认10）
 	CaptchaLogin bool `mapstructure:"captchaLogin"` // 是否开启验证码登录
+	IpFrequency  int  `mapstructure:"ipFrequency"`  // IP访问频率或者是次数
+	TimeLimit    int  `mapstructure:"timeLimit"`    // 时长（默认限制1分钟只能访问100次）
 }
 
 // LanguageCfg 语言相关配置
