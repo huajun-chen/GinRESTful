@@ -29,6 +29,7 @@
 - 服务优雅关机
 - `i18n`国际化翻译
 - 限制`IP`访问频率，每分钟只能访问100次
+- 并发请求限流，通过开关控制是否开启此功能
 
 ### 项目目录
 
@@ -49,7 +50,7 @@
 | global           | 定义全局变量                         | globalvar.go：定义后端项目的全局变量                         |
 | initialize       | 服务初始化                           | account.go：初始化一个admin账号<br>config.go：使用Viper初始化获取配置文件<br>logger.go：使用zap初始化项目日志<br>mysql.go：使用GORM初始化MYSQL数据库<br>redis.go：初始化Redis缓存数据库<br>router.go：初始化项目的路由<br>runserver.go：运行Gin服务，实现优雅关机<br>validator.go：使用Validator初始化参数校验，参数校验信息中英文翻译 |
 | logs             | 日志存储                             | 存储每天的日志文件                                           |
-| middlewares      | 中间件                               | admin.go：权限相关的中间件<br>cors.go：跨域中间件<br>i18n.go：i18n国际化中间件<br>jwt.go：JWT验证中间件<br>logger.go：日志中间件 |
+| middlewares      | 中间件                               | admin.go：权限相关的中间件<br>cors.go：跨域中间件<br>i18n.go：i18n国际化中间件<br>ipfrequency.go：限制某个IP的访问频率<br>jwt.go：JWT验证中间件<br>logger.go：日志中间件<br>ratelimit.go：并发请求限流，通过开关控制 |
 | models           | 数据库字段定义                       | user.go：用户模块的数据库字段                                |
 | response         | 统一封装response                     | response.go：对后端返回的数据格式进行统一封装                |
 | router           | 路由                                 | routerv1.go：V1版本路由                                      |

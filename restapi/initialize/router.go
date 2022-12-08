@@ -1,6 +1,7 @@
 package initialize
 
 import (
+	"GinRESTful/restapi/global"
 	"GinRESTful/restapi/middlewares"
 	"GinRESTful/restapi/router"
 	"github.com/gin-gonic/gin"
@@ -21,6 +22,10 @@ func InitRouter() *gin.Engine {
 	Router.Use(middlewares.I18n())
 	// 限制IP访问频率中间件
 	Router.Use(middlewares.Frequency())
+	// 限制服务器并发请求数量，默认关闭限流
+	if global.Settings.RaLiSw {
+		Router.Use(middlewares.RateLimit())
+	}
 	// 路由分组
 	APIGroup := Router.Group("/api")
 	{

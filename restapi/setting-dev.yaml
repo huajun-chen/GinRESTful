@@ -2,6 +2,8 @@ name: "GinRESTful"
 port: 8080
 page: 1
 pageSize: 20
+rateLimit: 10000
+rateLimitSwitch: false
 
 logs:
   level: "debug"
