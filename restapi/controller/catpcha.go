@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"GinRESTful/restapi/forms"
 	"GinRESTful/restapi/global"
 	"GinRESTful/restapi/response"
 	"github.com/gin-gonic/gin"
@@ -30,9 +31,10 @@ func GetCaptcha(c *gin.Context) {
 		})
 		return
 	}
-	data := make(map[string]interface{})
-	data["captcha_id"] = id
-	data["captcha_path"] = bs64
+	data := forms.CaptchaReturn{
+		CaptchaId:   id,
+		CaptchaPath: bs64,
+	}
 	response.Response(c, response.ResponseStruct{
 		Code: http.StatusOK,
 		Data: data,

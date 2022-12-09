@@ -43,7 +43,7 @@ func GetSystemInfo(c *gin.Context) {
 		return
 	}
 
-	data := forms.System{
+	data := forms.SystemReturn{
 		CPU:    cpuStruct,
 		Memory: memStruct,
 		Disk:   diskStruct,

@@ -72,10 +72,11 @@ func Register(c *gin.Context) {
 	}
 	// 生成新的Token
 	token := utils.CreateToken(c, userId, 2, insterUserInfo.UserName)
-	data := make(map[string]interface{})
-	data["id"] = userId
-	data["name"] = insterUserInfo.UserName
-	data["token"] = token
+	data := forms.RegLogReturn{
+		ID:    userId,
+		Name:  insterUserInfo.UserName,
+		Token: token,
+	}
 	response.Response(c, response.ResponseStruct{
 		Code: http.StatusOK,
 		Msg:  global.I18nMap["2000"],
@@ -126,10 +127,11 @@ func Login(c *gin.Context) {
 		return
 	}
 	token := utils.CreateToken(c, userInfo.ID, userInfo.Role, userInfo.UserName)
-	data := make(map[string]interface{})
-	data["id"] = userInfo.ID
-	data["name"] = userInfo.UserName
-	data["token"] = token
+	data := forms.RegLogReturn{
+		ID:    userInfo.ID,
+		Name:  userInfo.UserName,
+		Token: token,
+	}
 	response.Response(c, response.ResponseStruct{
 		Code: http.StatusOK,
 		Msg:  global.I18nMap["2001"],
@@ -194,8 +196,8 @@ func GetMyselfInfo(c *gin.Context) {
 
 	// 通过用户ID获取用户信息
 	myselfInfo, _ := dao.DaoFindUserInfoToId(userId.ID)
-	data := forms.NeedsUserInfo{
-		ID:        int(myselfInfo.ID),
+	data := forms.UserInfoReturn{
+		ID:        myselfInfo.ID,
 		CreatedAt: myselfInfo.CreatedAt.Format("2006-01-02"),
 		UserName:  myselfInfo.UserName,
 		Gender:    strconv.Itoa(myselfInfo.Gender),
@@ -241,10 +243,10 @@ func GetUserList(c *gin.Context) {
 		return
 	}
 	// 过滤用户列表，只返回需要的数据
-	var values []forms.NeedsUserInfo
+	var values []forms.UserInfoReturn
 	for _, u := range userList {
-		needUserInfo := forms.NeedsUserInfo{
-			ID:        int(u.ID),
+		needUserInfo := forms.UserInfoReturn{
+			ID:        u.ID,
 			CreatedAt: u.CreatedAt.Format("2006-01-02"),
 			UserName:  u.UserName,
 			Gender:    strconv.Itoa(u.Gender),
@@ -256,9 +258,10 @@ func GetUserList(c *gin.Context) {
 		values = append(values, needUserInfo)
 	}
 	// 获取数据正常
-	data := make(map[string]interface{})
-	data["total"] = total
-	data["values"] = values
+	data := forms.UserListReturn{
+		Total:  total,
+		Values: values,
+	}
 	response.Response(c, response.ResponseStruct{
 		Code: http.StatusOK,
 		Data: data,

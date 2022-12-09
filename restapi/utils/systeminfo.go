@@ -15,8 +15,8 @@ import (
 // 返回值：
 //		forms.CPU：CPU核心数，使用率
 //		error：错误信息
-func CPUInfo() (forms.CPUInfo, error) {
-	cpuStruct := forms.CPUInfo{}
+func CPUInfo() (forms.CPUReturn, error) {
+	cpuStruct := forms.CPUReturn{}
 	// CPU核心数，参数true：逻辑内核，参数false：物理内核
 	numCPUs, err := cpu.Counts(false)
 	if err != nil {
@@ -43,8 +43,8 @@ func CPUInfo() (forms.CPUInfo, error) {
 // 返回值：
 //		forms.Memory：内存全部，已使用，未使用，使用率
 //		error：错误信息
-func MemInfo() (forms.MemoryInfo, error) {
-	memStruct := forms.MemoryInfo{}
+func MemInfo() (forms.MemoryReturn, error) {
+	memStruct := forms.MemoryReturn{}
 	// 获取内存信息
 	memUsage, err := mem.SwapMemory()
 	if err != nil {
@@ -73,8 +73,8 @@ func MemInfo() (forms.MemoryInfo, error) {
 // 返回值：
 //		forms.Disk：内存全部容量，已使用容量，未使用容量
 //		error：错误信息
-func DiskInfo() (forms.DiskInfo, error) {
-	diskStruct := forms.DiskInfo{}
+func DiskInfo() (forms.DiskReturn, error) {
+	diskStruct := forms.DiskReturn{}
 	// 获取磁盘信息
 	diskUsage, err := disk.Usage("/")
 	if err != nil {
