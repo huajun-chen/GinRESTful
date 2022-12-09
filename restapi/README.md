@@ -30,6 +30,7 @@
 - `i18n`国际化翻译
 - 限制`IP`访问频率，每分钟只能访问100次
 - 并发请求限流，通过开关控制是否开启此功能
+- 获取系统健康信息，包括CPU、内存、磁盘等信息
 
 ### 项目目录
 
@@ -44,7 +45,7 @@
 | 文件/目录        | 概述                                 | 文件概述                                                     |
 | ---------------- | ------------------------------------ | ------------------------------------------------------------ |
 | config           | 配置文件对应的结构体定义             | config.go：配置的对应的struct                                |
-| controller       | 业务层                               | catpcha.go：生成图片验证码<br>user.go：用户模块控制层面相关代码 |
+| controller       | 业务层                               | catpcha.go：生成图片验证码<br>health.go：获取系统CPU、内存、磁盘等信息<br>user.go：用户模块控制层面相关代码 |
 | dao              | 操作数据库，给业务controller提供数据 | user.go：用户模块数据库操作                                  |
 | forms            | 字段验证的struct                     | base.go：基础的参数对应的struct<br>user.go：用户模块参数，返回的数据结构对应的struct定义 |
 | global           | 定义全局变量                         | globalvar.go：定义后端项目的全局变量                         |
@@ -55,7 +56,7 @@
 | response         | 统一封装response                     | response.go：对后端返回的数据格式进行统一封装                |
 | router           | 路由                                 | routerv1.go：V1版本路由                                      |
 | static           | 静态资源文件夹                       | i18n：存放i18n国际化翻译json文件                             |
-| utils            | 工具                                 | json.go：读取json文件，将其序列化为map<br>jwt.go：Token相关的函数/方法<br>md5.go：MD5计算<br>migration.go：执行main启动项目时对数据库表新建或迁移<br>page.go：与页数，每页的数量相关的代码封装<br>password.go：密码加密与密码校验<br>redis.go：与Redis操作相关的方法<br>validator.go：参数校验出现错误时代码统一封装 |
+| utils            | 工具                                 | json.go：读取json文件，将其序列化为map<br>jwt.go：Token相关的函数/方法<br>md5.go：MD5计算<br>migration.go：执行main启动项目时对数据库表新建或迁移<br>page.go：与页数，每页的数量相关的代码封装<br>password.go：密码加密与密码校验<br>redis.go：与Redis操作相关的方法<br>systeminfo.go：获取系统CPU、内存、磁盘等信息<br>validator.go：参数校验出现错误时代码统一封装 |
 | main.go          | 程序入口文件/主程序                  |                                                              |
 | README.md        | 后端Readme文件                       |                                                              |
 | setting-dev.yaml | 配置文件                             |                                                              |

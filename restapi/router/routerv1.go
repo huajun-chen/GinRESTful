@@ -18,6 +18,9 @@ func Routerv1(r *gin.RouterGroup) {
 		// 无需Token的接口
 		baseRouter.GET("/captcha", controller.GetCaptcha) // 验证码
 		// 需要Token的接口
+		baseRouterToken := baseRouter.Group("")
+		baseRouterToken.Use(middlewares.JWTAuth())
+		baseRouterToken.GET("/health", controller.GetSystemInfo) // 系统资源使用情况，CPU，内存，硬盘
 	}
 
 	// 用户模块路由
