@@ -22,7 +22,6 @@ import (
 func Register(c *gin.Context) {
 	registerForm := forms.RegisterForm{}
 	if err := c.ShouldBindJSON(&registerForm); err != nil {
-		// 参数异常
 		utils.HandleValidatorError(c, err)
 		return
 	}
@@ -64,6 +63,7 @@ func Register(c *gin.Context) {
 	}
 	userId, err := dao.DaoRegisterUser(insterUserInfo)
 	if err != nil {
+		zap.S().Errorf("%s：%s", global.I18nMap["10018"], err)
 		response.Response(c, response.ResponseStruct{
 			Code: 10018,
 			Msg:  global.I18nMap["10018"],
@@ -162,7 +162,7 @@ func Logout(c *gin.Context) {
 		err := utils.RedisSetStr(tokenMD5, userId, timeLeft)
 		if err != nil {
 			// Set Redis 错误的话，只记录日志
-			zap.L().Error("token Set Redis faild", zap.String("Redis Set", tokenStr.(string)))
+			zap.S().Errorf("token MD5 Set Redis faild：%s", tokenStr)
 		}
 	}()
 
@@ -228,6 +228,7 @@ func GetUserList(c *gin.Context) {
 	page, pageSize := utils.PageZero(userListForm.Page, userListForm.PageSize)
 	total, userList, err := dao.DaoGetUserList(page, pageSize)
 	if err != nil {
+		zap.S().Errorf("%s：%s", global.I18nMap["10004"], err)
 		response.Response(c, response.ResponseStruct{
 			Code: 10004,
 			Msg:  global.I18nMap["10004"],
@@ -339,6 +340,7 @@ func ModifyUserInfo(c *gin.Context) {
 	userMod.Mobile = modUserInfoForm.Mobile
 	userMod.Email = modUserInfoForm.Email
 	if err := dao.DaoModifyUserInfo(userId.ID, userMod); err != nil {
+		zap.S().Errorf("%s：%s", global.I18nMap["10003"], err)
 		response.Response(c, response.ResponseStruct{
 			Code: 10003,
 			Msg:  global.I18nMap["10003"],
@@ -368,6 +370,7 @@ func DelUser(c *gin.Context) {
 	// 删除用户
 	err := dao.DaoDelUserToPriKey(userMod)
 	if err != nil {
+		zap.S().Errorf("%s：%s", global.I18nMap["10002"], err)
 		response.Response(c, response.ResponseStruct{
 			Code: 10002,
 			Msg:  global.I18nMap["10002"],
