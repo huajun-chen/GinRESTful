@@ -13,8 +13,8 @@ type IdForm struct {
 
 // CPUInfo CPU信息
 type CPUInfo struct {
-	CpuCounts      string `json:"cpu_counts"`      // CPU物理核心数
-	CpuUsedpercent string `json:"cpu_usedpercent"` // CPU使用率
+	CpuCounts      string `json:"cpu_counts"`       // CPU物理核心数
+	CpuUsedpercent string `json:"cpu_used_percent"` // CPU使用率
 }
 
 // MemoryInfo 内存信息

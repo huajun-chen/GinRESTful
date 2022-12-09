@@ -88,18 +88,18 @@
       "data": {
           "cpu": {
               "cpu_counts": "4",
-              "cpu_usedpercent": "18.22"
+              "cpu_used_percent": "15.89"
           },
           "memory": {
-              "mem_total": "13.00",
-              "mem_used": "11.67",
-              "mem_free": "1.33",
-              "mem_used_percent": "89.79"
+              "mem_total": "14.00",
+              "mem_used": "12.94",
+              "mem_free": "1.06",
+              "mem_used_percent": "92.43"
           },
           "disk": {
               "disk_total": "233.47",
-              "disk_used": "142.70",
-              "disk_free": "90.77"
+              "disk_used": "143.69",
+              "disk_free": "89.78"
           }
       }
   }
