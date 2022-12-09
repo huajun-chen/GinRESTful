@@ -6,6 +6,7 @@ import (
 	"GinRESTful/restapi/response"
 	"GinRESTful/restapi/utils"
 	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
 	"net/http"
 )
 
@@ -18,6 +19,7 @@ func GetSystemInfo(c *gin.Context) {
 	// CPU
 	cpuStruct, err := utils.CPUInfo()
 	if err != nil {
+		zap.S().Errorf("%s：%s", global.I18nMap["10023"], err)
 		response.Response(c, response.ResponseStruct{
 			Code: 10023,
 			Msg:  global.I18nMap["10023"],
@@ -27,6 +29,7 @@ func GetSystemInfo(c *gin.Context) {
 	// 内存
 	memStruct, err := utils.MemInfo()
 	if err != nil {
+		zap.S().Errorf("%s：%s", global.I18nMap["10024"], err)
 		response.Response(c, response.ResponseStruct{
 			Code: 10024,
 			Msg:  global.I18nMap["10024"],
@@ -36,6 +39,7 @@ func GetSystemInfo(c *gin.Context) {
 	// 硬盘
 	diskStruct, err := utils.DiskInfo()
 	if err != nil {
+		zap.S().Errorf("%s：%s", global.I18nMap["10025"], err)
 		response.Response(c, response.ResponseStruct{
 			Code: 10025,
 			Msg:  global.I18nMap["10025"],
