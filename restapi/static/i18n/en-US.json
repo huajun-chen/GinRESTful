@@ -28,5 +28,8 @@
   "10019": "Incorrect Old Password",
   "10020": "New Password is the Same as Old Password",
   "10021": "Request too frequent, please try again later",
-  "10022": "The current server is busy, please try again later"
+  "10022": "The current server is busy, please try again later",
+  "10023": "Failed to get CPU information",
+  "10024": "Failed to get memory information",
+  "10025": "Failed to get disk information"
 }

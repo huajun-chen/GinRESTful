@@ -64,6 +64,49 @@
   }
   ```
 
+#### 1.2 系统信息
+
+- 描述
+
+  获取系统的信息，包括CPU、内存、磁盘等信息
+
+- 请求
+
+  ```json
+  GET /api/v1/base/health
+  ```
+
+- 参数列表
+
+  无参数
+
+- 返回示例
+
+  ```json
+  {
+      "code": 200,
+      "data": {
+          "cpu": {
+              "cpu_counts": "4",
+              "cpu_usedpercent": "18.22"
+          },
+          "memory": {
+              "mem_total": "13.00",
+              "mem_used": "11.67",
+              "mem_free": "1.33",
+              "mem_used_percent": "89.79"
+          },
+          "disk": {
+              "disk_total": "233.47",
+              "disk_used": "142.70",
+              "disk_free": "90.77"
+          }
+      }
+  }
+  ```
+
+---
+
 ### 2. 用户模块
 
 #### 2.1 用户注册
