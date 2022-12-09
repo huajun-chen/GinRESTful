@@ -2,7 +2,7 @@ package forms
 
 // LoginForm 用户登录参数
 type LoginForm struct {
-	UserName  string `json:"user_name" binding:"required,min=3,max=20"` // 用户名
+	UserName  string `json:"user_name" binding:"required,min=3,max=16"` // 用户名
 	Password  string `json:"password" binding:"required,min=8,max=64"`  // 密码
 	Captcha   string `json:"captcha" binding:"required,len=5"`          // 验证码
 	CaptchaId string `json:"captcha_id" binding:"required"`             //验证码ID
@@ -30,16 +30,29 @@ type ModifyUserInfoForm struct {
 	Email       string `json:"email" binding:"omitempty,email"`               // 邮箱
 }
 
-// NeedsUserInfo 定义结构体存储需要返回的用户数据
+// UserInfoReturn 定义结构体存储需要返回的用户数据
 // values里的数据除了ID是int类型，其他的都是字符串类型，返回的字段不一定全部都是数据库的字段
 // 也有可能是数据库字段之间计算之后的值，所以返回的数据结构体单独定义
-type NeedsUserInfo struct {
-	ID        int    `json:"id"`
-	CreatedAt string `json:"created_at"`
-	UserName  string `json:"user_name"`
-	Gender    string `json:"gender"`
-	Desc      string `json:"desc"`
-	Role      string `json:"role"`
-	Mobile    string `json:"mobile"`
-	Email     string `json:"email"`
+type UserInfoReturn struct {
+	ID        uint   `json:"id"`         // 用户ID
+	CreatedAt string `json:"created_at"` // 创建时间
+	UserName  string `json:"user_name"`  // 用户名
+	Gender    string `json:"gender"`     // 性别
+	Desc      string `json:"desc"`       // 描述
+	Role      string `json:"role"`       // 角色
+	Mobile    string `json:"mobile"`     // 电话
+	Email     string `json:"email"`      // 邮箱
+}
+
+// RegLogReturn 注册和登录接口返回的数据
+type RegLogReturn struct {
+	ID    uint   `json:"id"`    // 用户ID
+	Name  string `json:"name"`  // 用户名
+	Token string `json:"token"` // 用户Token
+}
+
+// UserListReturn 用户列表信息
+type UserListReturn struct {
+	Total  int              `json:"total"`  // 总数
+	Values []UserInfoReturn `json:"values"` // 用户列表
 }
