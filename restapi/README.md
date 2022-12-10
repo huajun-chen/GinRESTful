@@ -36,7 +36,7 @@
 
 目录结构：
 
-<div align="center"><img src="http://tva1.sinaimg.cn/large/0079DIvogy1h8s6vz185wj30ho0rs42c.jpg" alt="image.png" style="zoom:50%;" /></div>
+<div align="center"><img src="http://tva1.sinaimg.cn/large/0079DIvogy1h8yu5pwz53j30hm0t60wk.jpg" alt="image.png" style="zoom:40%;" /></div>
 
 目录说明：
 
@@ -57,8 +57,10 @@
 | router           | 路由                                 | routerv1.go：V1版本路由                                      |
 | static           | 静态资源文件夹                       | i18n：存放i18n国际化翻译json文件                             |
 | utils            | 工具                                 | json.go：读取json文件，将其序列化为map<br>jwt.go：Token相关的函数/方法<br>md5.go：MD5计算<br>migration.go：执行main启动项目时对数据库表新建或迁移<br>page.go：与页数，每页的数量相关的代码封装<br>password.go：密码加密与密码校验<br>redis.go：与Redis操作相关的方法<br>systeminfo.go：获取系统CPU、内存、磁盘等信息<br>validator.go：参数校验出现错误时代码统一封装 |
+| Dockerfile       | Dockerfile文件                       |                                                              |
+| go.mod           | go mod文件                           |                                                              |
 | main.go          | 程序入口文件/主程序                  |                                                              |
-| README.md        | 后端Readme文件                       |                                                              |
+| README.md        | README文件                           |                                                              |
 | setting-dev.yaml | 配置文件                             |                                                              |
 
 ### 参数
@@ -164,7 +166,7 @@ func DaoFindUserInfoToId(userId uint) (*models.User, bool) {
 
 ### API接口文档
 
-详情见`docs`目录下`API接口文档`
+详情见`docs`目录下`API接口文档`，[点击跳转](https://github.com/huajun-chen/GinRESTful/blob/master/docs/API%E6%8E%A5%E5%8F%A3%E6%96%87%E6%A1%A3.md)
 
 ### 运行项目
 
@@ -199,18 +201,7 @@ docker run -itd --restart=always --name mysql -p 3306:3306 -e MYSQL_ROOT_PASSWOR
 
 上面的命令会运行一个名为`mysql`的`MySQL`容器，并将容器内的`MySQL`服务在宿主机的3306端口供外部程序访问。同时，该容器的重启策略设置为总是重启
 
-`Redis`基础的命令：
-
-```sh
-Docker进入Redis：docker exec -it redis /bin/bash
-启动客户端：redis-cli
-输入密码：auth 1qaz@WSX
-查看所有key：keys *
-Set字符串：set testkey testvalues
-Get字符串：get testkey
-查看到期时间：ttl testkey
-Del字符串：del testkey
-```
+**注意：安装完`MySQL`后，需要新建一个数据库，数据库名为：`ginrestful`**
 
 #### 2. Docker安装Redis
 
@@ -240,19 +231,32 @@ docker run -itd --restart=always --name redis -p 6379:6379 redis:6.0 --requirepa
 
 上面的命令会运行一个名为`redis`的`Redis`容器，并将容器内的`Redis`服务在宿主机的6379端口供外部程序访问。同时，该容器的重启策略设置为总是重启
 
+`Redis`基础的命令：
+
+```sh
+Docker进入Redis：docker exec -it redis /bin/bash
+启动客户端：redis-cli
+输入密码：auth 1qaz@WSX
+查看所有key：keys *
+Set字符串：set testkey testvalues
+Get字符串：get testkey
+查看到期时间：ttl testkey
+Del字符串：del testkey
+```
+
 #### 3. 本地运行项目
 
 如果是通过`git clone`将项目克隆到本地，需要进入到项目的`main.go`所在目录，在这个目录下，可以看到`main.go`，`go.mod`文件，在此目录下执行：`go mod download`安装依赖
 
 依赖安装完成之后，在此目录下继续执行`go run main.go`来运行项目
 
-**注意：** 运行项目之前需要保证`MySQL`和`Redis`都正常启动，配置文件`setting-dev.yaml`中`MySQL`和`Redis`的`host`都为：`127.0.0.1`
+**注意：** 运行项目之前需要保证`MySQL`和`Redis`都正常启动，配置文件`setting-dev.yaml`中`MySQL`和`Redis`的`host`都为：`127.0.0.1`，`MySQL`数据库里有`ginrestful`数据库存在
 
 ### 项目部署
 
 #### 1. 本地Mac环境将Go Gin项目部署到Docker
 
-**前提条件：确保项目能正常在本地运行，确保`Docker`的`MySQL`和`Redis`正常运行**
+**前提条件：确保项目能正常在本地运行，确保`Docker`的`MySQL`和`Redis`正常运行，`MySQL`数据库里有`ginrestful`数据库存在**
 
 **尤为重要：需要将配置文件`setting-dev.yaml`中`Mysql`和`Redis`的`host`都改为：`docker.for.mac.localhost`**
 
@@ -290,7 +294,45 @@ docker run -d -it --link mysql:mysql --link redis:redis -p 8080:8080 -v /Users/c
 
 #### 2. 远程Linux服务器部署
 
-TODO
+登录远程`Linxu`服务器
+
+服务器安装`Docker`，`Docker`安装`Mysql`，安装`Redis`，在`MySQL`数据里新建一个名为`ginrestful`的数据库
+
+进入到`opt`目录下克隆项目
+
+```sh
+git clone https://github.com/huajun-chen/GinRESTful.git
+```
+
+修改`restapi`目录下的`Dockerfile`文件内容
+
+```json
+# 移动到工作目录，这个目录是项目代码在机器本地的目录，在这个目录里可以看到main.go/go.mod/Dockerfile文件
+WORKDIR /Users/chenhuajun/golangprojects/GinRESTful/restapi
+改为：WORKDIR /opt/GinRESTful/restapi
+---
+# 从ginrestful镜像中把/app拷贝到当前目录
+COPY --from=ginrestful /Users/chenhuajun/golangprojects/GinRESTful/restapi/app /
+改为：COPY --from=ginrestful /opt/GinRESTful/restapi/app /
+```
+
+保存文件并退出
+
+构建镜像：
+
+```sh
+docker build . -t goginimage
+```
+
+运行容器：
+
+```sh
+docker run -d -it --link mysql:mysql --link redis:redis -p 8080:8080 -v /opt/GinRESTful/restapi:/opt/GinRESTful/restapi/app/ --add-host=ginrestfulapp-host:127.0.0.1 --name ginrestfulapp 6f5632156de8
+```
+
+`6f5632156de8`是构建的镜像`ID`
+
+### TODO
 
 
 
