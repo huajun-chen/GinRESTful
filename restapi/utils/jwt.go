@@ -52,7 +52,7 @@ func CreateToken(c *gin.Context, id uint, role int, name string) string {
 	// 生成Token
 	token, err := j.CreateToken(claims)
 	if err != nil {
-		response.Response(c, response.ResponseStruct{
+		response.Response(c, response.ResStruct{
 			Code: 10012,
 			Msg:  global.I18nMap["10012"],
 		})

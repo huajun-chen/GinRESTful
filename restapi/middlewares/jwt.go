@@ -18,7 +18,7 @@ func JWTAuth() gin.HandlerFunc {
 		// jwt鉴权取头部信息Authorization登录时回返回token信息
 		authorization := c.Request.Header.Get("Authorization")
 		if authorization == "" {
-			response.Response(c, response.ResponseStruct{
+			response.Response(c, response.ResStruct{
 				Code: 10009,
 				Msg:  global.I18nMap["10009"],
 			})
@@ -28,7 +28,7 @@ func JWTAuth() gin.HandlerFunc {
 		// 按空格分隔Authorization内容（Bearer token信息）
 		bearerToken := strings.Split(authorization, " ")
 		if len(bearerToken) != 2 || bearerToken[0] != "Bearer" {
-			response.Response(c, response.ResponseStruct{
+			response.Response(c, response.ResStruct{
 				Code: 10011,
 				Msg:  global.I18nMap["10011"],
 			})
@@ -41,14 +41,14 @@ func JWTAuth() gin.HandlerFunc {
 		claims, err := j.ParseToken(bearerToken[1])
 		if err != nil {
 			if err == utils.TokenExpired {
-				response.Response(c, response.ResponseStruct{
+				response.Response(c, response.ResStruct{
 					Code: 10010,
 					Msg:  global.I18nMap["10010"],
 				})
 				c.Abort()
 				return
 			}
-			response.Response(c, response.ResponseStruct{
+			response.Response(c, response.ResStruct{
 				Code: 10011,
 				Msg:  global.I18nMap["10011"],
 			})
@@ -58,7 +58,7 @@ func JWTAuth() gin.HandlerFunc {
 		// 判断Token是否在黑名单中（true：在，false不在）
 		ok := utils.IsInBlacklist(bearerToken[1])
 		if ok {
-			response.Response(c, response.ResponseStruct{
+			response.Response(c, response.ResStruct{
 				Code: 10011,
 				Msg:  global.I18nMap["10011"], // Token在黑名单中，定义为失效
 			})
