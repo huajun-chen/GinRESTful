@@ -36,32 +36,33 @@
 
 目录结构：
 
-<div align="center"><img src="http://tva1.sinaimg.cn/large/0079DIvogy1h8yu5pwz53j30hm0t60wk.jpg" alt="image.png" style="zoom:40%;" /></div>
+<div align="center"><img src="http://tva1.sinaimg.cn/large/0079DIvogy1h90cb9qivbj30hq0u6q78.jpg" alt="image.png" style="zoom:40%;" /></div>
 
 目录说明：
 
 **备注：GitHub仓库缺少个目录（logs），需要自己手动添加**
 
-| 文件/目录        | 概述                                 | 文件概述                                                     |
-| ---------------- | ------------------------------------ | ------------------------------------------------------------ |
-| config           | 配置文件对应的结构体定义             | config.go：配置的对应的struct                                |
-| controller       | 业务层                               | catpcha.go：生成图片验证码<br>health.go：获取系统CPU、内存、磁盘等信息<br>user.go：用户模块控制层面相关代码 |
-| dao              | 操作数据库，给业务controller提供数据 | user.go：用户模块数据库操作                                  |
-| forms            | 字段验证的struct                     | base.go：基础的参数对应的struct<br>user.go：用户模块参数，返回的数据结构对应的struct定义 |
-| global           | 定义全局变量                         | globalvar.go：定义后端项目的全局变量                         |
-| initialize       | 服务初始化                           | account.go：初始化一个admin账号<br>config.go：使用Viper初始化获取配置文件<br>logger.go：使用zap初始化项目日志<br>mysql.go：使用GORM初始化MYSQL数据库<br>redis.go：初始化Redis缓存数据库<br>router.go：初始化项目的路由<br>runserver.go：运行Gin服务，实现优雅关机<br>validator.go：使用Validator初始化参数校验，参数校验信息中英文翻译 |
-| logs             | 日志存储                             | 存储每天的日志文件                                           |
-| middlewares      | 中间件                               | admin.go：权限相关的中间件<br>cors.go：跨域中间件<br>i18n.go：i18n国际化中间件<br>ipfrequency.go：限制某个IP的访问频率<br>jwt.go：JWT验证中间件<br>logger.go：日志中间件<br>ratelimit.go：并发请求限流，通过开关控制 |
-| models           | 数据库字段定义                       | user.go：用户模块的数据库字段                                |
-| response         | 统一封装response                     | response.go：对后端返回的数据格式进行统一封装                |
-| router           | 路由                                 | routerv1.go：V1版本路由                                      |
-| static           | 静态资源文件夹                       | i18n：存放i18n国际化翻译json文件                             |
-| utils            | 工具                                 | json.go：读取json文件，将其序列化为map<br>jwt.go：Token相关的函数/方法<br>md5.go：MD5计算<br>migration.go：执行main启动项目时对数据库表新建或迁移<br>page.go：与页数，每页的数量相关的代码封装<br>password.go：密码加密与密码校验<br>redis.go：与Redis操作相关的方法<br>systeminfo.go：获取系统CPU、内存、磁盘等信息<br>validator.go：参数校验出现错误时代码统一封装 |
-| Dockerfile       | Dockerfile文件                       |                                                              |
-| go.mod           | go mod文件                           |                                                              |
-| main.go          | 程序入口文件/主程序                  |                                                              |
-| README.md        | README文件                           |                                                              |
-| setting-dev.yaml | 配置文件                             |                                                              |
+| 文件/目录        | 概述                     | 文件概述                                                     |
+| ---------------- | ------------------------ | ------------------------------------------------------------ |
+| config           | 配置文件对应的结构体定义 | config.go：配置的对应的struct                                |
+| controller       | 控制层                   | v1：v1版本的控制控制层                                       |
+| dao              | 数据层，给业务层提供数据 | user.go：用户模块数据库操作                                  |
+| forms            | 字段验证的struct         | base.go：基础的参数对应的struct<br>user.go：用户模块参数，返回的数据结构对应的struct定义 |
+| global           | 定义全局变量             | globalvar.go：定义后端项目的全局变量                         |
+| initialize       | 服务初始化               | account.go：初始化一个admin账号<br>config.go：使用Viper初始化获取配置文件<br>logger.go：使用zap初始化项目日志<br>mysql.go：使用GORM初始化MYSQL数据库<br>redis.go：初始化Redis缓存数据库<br>router.go：初始化项目的路由<br>runserver.go：运行Gin服务，实现优雅关机<br>validator.go：使用Validator初始化参数校验，参数校验信息中英文翻译 |
+| logs             | 日志存储                 | 存储每天的日志文件                                           |
+| middlewares      | 中间件                   | admin.go：权限相关的中间件<br>cors.go：跨域中间件<br>i18n.go：i18n国际化中间件<br>ipfrequency.go：限制某个IP的访问频率<br>jwt.go：JWT验证中间件<br>logger.go：日志中间件<br>ratelimit.go：并发请求限流，通过开关控制 |
+| models           | 数据库字段定义           | user.go：用户模块的数据库字段                                |
+| response         | 统一封装response         | response.go：对后端返回的数据格式进行统一封装                |
+| router           | 路由                     | routerv1.go：V1版本路由                                      |
+| Service          | 业务层                   | captcha.go：生成图片验证码<br/>health.go：获取系统CPU、内存、磁盘等信息<br/>user.go：用户模块控制层面相关代码 |
+| static           | 静态资源文件夹           | i18n：存放i18n国际化翻译json文件                             |
+| utils            | 工具                     | json.go：读取json文件，将其序列化为map<br>jwt.go：Token相关的函数/方法<br>md5.go：MD5计算<br>migration.go：执行main启动项目时对数据库表新建或迁移<br>page.go：与页数，每页的数量相关的代码封装<br>password.go：密码加密与密码校验<br>redis.go：与Redis操作相关的方法<br>systeminfo.go：获取系统CPU、内存、磁盘等信息<br>validator.go：参数校验出现错误时代码统一封装 |
+| Dockerfile       | Dockerfile文件           |                                                              |
+| go.mod           | go mod文件               |                                                              |
+| main.go          | 程序入口文件/主程序      |                                                              |
+| README.md        | README文件               |                                                              |
+| setting-dev.yaml | 配置文件                 |                                                              |
 
 ### 参数
 

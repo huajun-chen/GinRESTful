@@ -28,7 +28,7 @@ func I18n() gin.HandlerFunc {
 		// 根据Accept-Language读取对应的json文件
 		translations, err := utils.ReadJSON(filePath)
 		if err != nil {
-			response.Response(c, response.ResponseStruct{
+			response.Response(c, response.ResStruct{
 				Code: 10006,
 				Msg:  global.I18nMap["10006"],
 			})

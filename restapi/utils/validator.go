@@ -3,7 +3,6 @@ package utils
 import (
 	"GinRESTful/restapi/global"
 	"GinRESTful/restapi/response"
-	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"strings"
 )
@@ -14,23 +13,24 @@ import (
 // 返回值：
 //		c：gin.Context的指针
 //		err：错误信息
-func HandleValidatorError(c *gin.Context, err error) {
+func HandleValidatorError(err error) response.ResStruct {
 	//如何返回错误信息
 	errs, ok := err.(validator.ValidationErrors)
 	if !ok {
-		response.Response(c, response.ResponseStruct{
+		failStruct := response.ResStruct{
 			Code: 10000,
 			Msg:  global.I18nMap["10000"],
 			Data: err.Error(),
-		})
-		return
+		}
+		return failStruct
 	}
 	data := removeTopStruct(errs.Translate(global.Trans))
-	response.Response(c, response.ResponseStruct{
+	failStruct := response.ResStruct{
 		Code: 10000,
 		Msg:  global.I18nMap["10000"],
 		Data: data,
-	})
+	}
+	return failStruct
 }
 
 // removeTopStruct 定义一个去掉结构体名称前缀的自定义方法

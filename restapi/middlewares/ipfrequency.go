@@ -29,7 +29,7 @@ func Frequency() gin.HandlerFunc {
 				expiration[ip] = nowTime.Add(time.Duration(global.Settings.UserInfo.TimeLimit) * time.Minute)
 			} else if count > global.Settings.UserInfo.IpFrequency {
 				// 计数器未到期，但已超过最大频率次数
-				response.Response(c, response.ResponseStruct{
+				response.Response(c, response.ResStruct{
 					Code: 10021,
 					Msg:  global.I18nMap["10021"],
 				})

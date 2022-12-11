@@ -1,4 +1,4 @@
-package controller
+package service
 
 import (
 	"GinRESTful/restapi/dao"
@@ -14,45 +14,46 @@ import (
 	"time"
 )
 
-// Register 注册用户
+// SerRegister 业务层：注册用户
 // 参数：
-//		c *gin.Context：gin.Context的指针
+//		：gin.Context的指针
 // 返回值：
-//		无
-func Register(c *gin.Context) {
+//		response.ResStruct：响应的结构体
+func SerRegister(c *gin.Context) response.ResStruct {
 	registerForm := forms.RegisterForm{}
 	if err := c.ShouldBindJSON(&registerForm); err != nil {
-		utils.HandleValidatorError(c, err)
-		return
+		failStruct := utils.HandleValidatorError(err)
+		return failStruct
 	}
+
 	// 验证码
 	userSet := global.Settings.UserInfo
 	// 判断是否开启验证码登录
 	if userSet.CaptchaLogin {
 		if !store.Verify(registerForm.CaptchaId, registerForm.Captcha, true) {
-			response.Response(c, response.ResponseStruct{
+			failStruct := response.ResStruct{
 				Code: 10008,
 				Msg:  global.I18nMap["10008"],
-			})
-			return
+			}
+			return failStruct
 		}
 	}
 	// 判断用户名是否存在
 	_, ok := dao.DaoFindUserInfoToUserName(registerForm.UserName)
 	if ok {
-		response.Response(c, response.ResponseStruct{
+		failStruct := response.ResStruct{
 			Code: 10017,
 			Msg:  global.I18nMap["10017"],
-		})
-		return
+		}
+		return failStruct
 	}
 	// 两次密码是否一致
 	if registerForm.Password != registerForm.Password2 {
-		response.Response(c, response.ResponseStruct{
+		failStruct := response.ResStruct{
 			Code: 10016,
 			Msg:  global.I18nMap["10016"],
-		})
-		return
+		}
+		return failStruct
 	}
 	// 密码加密
 	pwd, _ := utils.SetPassword(registerForm.Password)
@@ -64,11 +65,11 @@ func Register(c *gin.Context) {
 	userId, err := dao.DaoRegisterUser(insterUserInfo)
 	if err != nil {
 		zap.S().Errorf("%s：%s", global.I18nMap["10018"], err)
-		response.Response(c, response.ResponseStruct{
+		failStruct := response.ResStruct{
 			Code: 10018,
 			Msg:  global.I18nMap["10018"],
-		})
-		return
+		}
+		return failStruct
 	}
 	// 生成新的Token
 	token := utils.CreateToken(c, userId, 2, insterUserInfo.UserName)
@@ -77,54 +78,55 @@ func Register(c *gin.Context) {
 		Name:  insterUserInfo.UserName,
 		Token: token,
 	}
-	response.Response(c, response.ResponseStruct{
+	succStruct := response.ResStruct{
 		Code: http.StatusOK,
 		Msg:  global.I18nMap["2000"],
 		Data: data,
-	})
+	}
+	return succStruct
 }
 
-// Login 用户登录
+// SerLogin 业务层：用户登录
 // 参数：
-//		c *gin.Context：gin.Context的指针
+//		：gin.Context的指针
 // 返回值：
-//		无
-func Login(c *gin.Context) {
+//		response.ResStruct：响应的结构体
+func SerLogin(c *gin.Context) response.ResStruct {
 	loginForm := forms.LoginForm{}
 	if err := c.ShouldBindJSON(&loginForm); err != nil {
 		// 参数异常处理
-		utils.HandleValidatorError(c, err)
-		return
+		failStruct := utils.HandleValidatorError(err)
+		return failStruct
 	}
 	// 验证码
 	userSet := global.Settings.UserInfo
 	// 判断是否开启验证码登录
 	if userSet.CaptchaLogin {
 		if !store.Verify(loginForm.CaptchaId, loginForm.Captcha, true) {
-			response.Response(c, response.ResponseStruct{
+			failStruct := response.ResStruct{
 				Code: 10008,
 				Msg:  global.I18nMap["10008"],
-			})
-			return
+			}
+			return failStruct
 		}
 	}
 	// 查询用户是否存在
 	userInfo, ok := dao.DaoFindUserInfoToUserName(loginForm.UserName)
 	if !ok {
-		response.Response(c, response.ResponseStruct{
+		failStruct := response.ResStruct{
 			Code: 10013,
 			Msg:  global.I18nMap["10013"],
-		})
-		return
+		}
+		return failStruct
 	}
 	// 判断密码是否正确
 	pwdBool := utils.CheckPassword(userInfo.Password, loginForm.Password)
 	if !pwdBool {
-		response.Response(c, response.ResponseStruct{
+		failStruct := response.ResStruct{
 			Code: 10015,
 			Msg:  global.I18nMap["10015"],
-		})
-		return
+		}
+		return failStruct
 	}
 	token := utils.CreateToken(c, userInfo.ID, userInfo.Role, userInfo.UserName)
 	data := forms.RegLogReturn{
@@ -132,19 +134,20 @@ func Login(c *gin.Context) {
 		Name:  userInfo.UserName,
 		Token: token,
 	}
-	response.Response(c, response.ResponseStruct{
+	succStruct := response.ResStruct{
 		Code: http.StatusOK,
 		Msg:  global.I18nMap["2001"],
 		Data: data,
-	})
+	}
+	return succStruct
 }
 
-// Logout 用户登出
+// SerLogout 业务层：用户登出
 // 参数：
-//		c *gin.Context：gin.Context的指针
+//		：gin.Context的指针
 // 返回值：
-//		无
-func Logout(c *gin.Context) {
+//		response.ResStruct：响应的结构体
+func SerLogout(c *gin.Context) response.ResStruct {
 	// 获取Token
 	tokenStr, _ := c.Get("token")
 	// 获取用户ID
@@ -166,32 +169,33 @@ func Logout(c *gin.Context) {
 		}
 	}()
 
-	response.Response(c, response.ResponseStruct{
+	succStruct := response.ResStruct{
 		Code: http.StatusOK,
 		Msg:  global.I18nMap["2002"],
-	})
+	}
+	return succStruct
 }
 
-// GetMyselfInfo 获取用户自己的信息
+// SerGetMyselfInfo 业务层：获取用户自己的信息
 // 参数：
-//		c *gin.Context：gin.Context的指针
+//		：gin.Context的指针
 // 返回值：
-//		无
-func GetMyselfInfo(c *gin.Context) {
+//		response.ResStruct：响应的结构体
+func SerGetMyselfInfo(c *gin.Context) response.ResStruct {
 	// 从参数中获取用户ID
 	userId := forms.IdForm{}
 	if err := c.ShouldBindUri(&userId); err != nil {
-		utils.HandleValidatorError(c, err)
-		return
+		failStruct := utils.HandleValidatorError(err)
+		return failStruct
 	}
 	// 判断是本人，不能获取别人的用户信息
 	tokenUserId, _ := c.Get("userId")
 	if tokenUserId != userId.ID {
-		response.Response(c, response.ResponseStruct{
+		failStruct := response.ResStruct{
 			Code: 10014,
 			Msg:  global.I18nMap["10014"],
-		})
-		return
+		}
+		return failStruct
 	}
 
 	// 通过用户ID获取用户信息
@@ -206,42 +210,43 @@ func GetMyselfInfo(c *gin.Context) {
 		Mobile:    myselfInfo.Mobile,
 		Email:     myselfInfo.Email,
 	}
-	response.Response(c, response.ResponseStruct{
+	succStruct := response.ResStruct{
 		Code: http.StatusOK,
 		Data: data,
-	})
+	}
+	return succStruct
 }
 
-// GetUserList 获取用户列表
+// SerGetUserList 业务层：获取用户列表
 // 参数：
-//		c *gin.Context：gin.Context的指针
+//		：gin.Context的指针
 // 返回值：
-//		无
-func GetUserList(c *gin.Context) {
+//		response.ResStruct：响应的结构体
+func SerGetUserList(c *gin.Context) response.ResStruct {
 	// 获取参数
 	userListForm := forms.UserListForm{}
 	if err := c.ShouldBindQuery(&userListForm); err != nil {
-		utils.HandleValidatorError(c, err)
-		return
+		failStruct := utils.HandleValidatorError(err)
+		return failStruct
 	}
 	// 获取数据
 	page, pageSize := utils.PageZero(userListForm.Page, userListForm.PageSize)
 	total, userList, err := dao.DaoGetUserList(page, pageSize)
 	if err != nil {
 		zap.S().Errorf("%s：%s", global.I18nMap["10004"], err)
-		response.Response(c, response.ResponseStruct{
+		failStruct := response.ResStruct{
 			Code: 10004,
 			Msg:  global.I18nMap["10004"],
-		})
-		return
+		}
+		return failStruct
 	}
 	// 获取数据为空
 	if total == 0 {
-		response.Response(c, response.ResponseStruct{
+		failStruct := response.ResStruct{
 			Code: 10005,
 			Msg:  global.I18nMap["10005"],
-		})
-		return
+		}
+		return failStruct
 	}
 	// 过滤用户列表，只返回需要的数据
 	var values []forms.UserInfoReturn
@@ -263,39 +268,39 @@ func GetUserList(c *gin.Context) {
 		Total:  total,
 		Values: values,
 	}
-	response.Response(c, response.ResponseStruct{
+	succStruct := response.ResStruct{
 		Code: http.StatusOK,
 		Data: data,
-	})
+	}
+	return succStruct
 }
 
-// ModifyUserInfo 修改用户信息
+// SerModifyUserInfo 业务层：修改用户信息
 // 参数：
-//		c *gin.Context：gin.Context的指针
+//		：gin.Context的指针
 // 返回值：
-//		无
-func ModifyUserInfo(c *gin.Context) {
+//		response.ResStruct：响应的结构体
+func SerModifyUserInfo(c *gin.Context) response.ResStruct {
 	// 获取需要修改的用户ID
 	userId := forms.IdForm{}
 	if err := c.ShouldBindUri(&userId); err != nil {
-		utils.HandleValidatorError(c, err)
-		return
+		failStruct := utils.HandleValidatorError(err)
+		return failStruct
 	}
 	// 获取需要修改的字段的参数
 	modUserInfoForm := forms.ModifyUserInfoForm{}
 	if err := c.ShouldBindJSON(&modUserInfoForm); err != nil {
-		utils.HandleValidatorError(c, err)
-		return
+		failStruct := utils.HandleValidatorError(err)
+		return failStruct
 	}
-
 	// 判断是否是本人，只能修改自己的信息
 	tokenUserId, _ := c.Get("userId")
 	if tokenUserId != userId.ID {
-		response.Response(c, response.ResponseStruct{
+		failStruct := response.ResStruct{
 			Code: 10003,
 			Msg:  global.I18nMap["10003"],
-		})
-		return
+		}
+		return failStruct
 	}
 	// 定义models.User接收需要修改的字段和对应的值
 	userMod := models.User{}
@@ -306,27 +311,27 @@ func ModifyUserInfo(c *gin.Context) {
 		userInfo, _ := dao.DaoFindUserInfoToId(userId.ID)
 		pwdBool := utils.CheckPassword(userInfo.Password, modUserInfoForm.PasswordOld)
 		if !pwdBool {
-			response.Response(c, response.ResponseStruct{
+			failStruct := response.ResStruct{
 				Code: 10019,
 				Msg:  global.I18nMap["10019"],
-			})
-			return
+			}
+			return failStruct
 		}
 		// 判断旧密码与新密码是否一致
 		if modUserInfoForm.PasswordOld == modUserInfoForm.Password {
-			response.Response(c, response.ResponseStruct{
+			failStruct := response.ResStruct{
 				Code: 10020,
 				Msg:  global.I18nMap["10020"],
-			})
-			return
+			}
+			return failStruct
 		}
 		// 判断修改后的两个密码密码是否一致
 		if modUserInfoForm.Password != modUserInfoForm.Password2 {
-			response.Response(c, response.ResponseStruct{
+			failStruct := response.ResStruct{
 				Code: 10016,
 				Msg:  global.I18nMap["10016"],
-			})
-			return
+			}
+			return failStruct
 		}
 		// 密码加密
 		pwdStr, _ := utils.SetPassword(modUserInfoForm.Password)
@@ -341,44 +346,45 @@ func ModifyUserInfo(c *gin.Context) {
 	userMod.Email = modUserInfoForm.Email
 	if err := dao.DaoModifyUserInfo(userId.ID, userMod); err != nil {
 		zap.S().Errorf("%s：%s", global.I18nMap["10003"], err)
-		response.Response(c, response.ResponseStruct{
+		failStruct := response.ResStruct{
 			Code: 10003,
 			Msg:  global.I18nMap["10003"],
-		})
-		return
+		}
+		return failStruct
 	}
-	response.Response(c, response.ResponseStruct{
+	succStruct := response.ResStruct{
 		Code: http.StatusOK,
 		Msg:  global.I18nMap["2005"],
-	})
+	}
+	return succStruct
 }
 
-// DelUser 删除用户信息（需要权限）
+// SerDelUser 业务层：删除用户信息（需要权限）
 // 参数：
-//		c *gin.Context：gin.Context的指针
+//		：gin.Context的指针
 // 返回值：
-//		无
-func DelUser(c *gin.Context) {
+//		response.ResStruct：响应的结构体
+func SerDelUser(c *gin.Context) response.ResStruct {
 	// 从参数中获取用户ID
 	userId := forms.IdForm{}
 	if err := c.ShouldBindUri(&userId); err != nil {
-		utils.HandleValidatorError(c, err)
-		return
+		failStruct := utils.HandleValidatorError(err)
+		return failStruct
 	}
-
 	userMod := models.User{ID: userId.ID}
 	// 删除用户
 	err := dao.DaoDelUserToPriKey(userMod)
 	if err != nil {
 		zap.S().Errorf("%s：%s", global.I18nMap["10002"], err)
-		response.Response(c, response.ResponseStruct{
+		failStruct := response.ResStruct{
 			Code: 10002,
 			Msg:  global.I18nMap["10002"],
-		})
-		return
+		}
+		return failStruct
 	}
-	response.Response(c, response.ResponseStruct{
+	succStruct := response.ResStruct{
 		Code: http.StatusOK,
 		Msg:  global.I18nMap["2004"],
-	})
+	}
+	return succStruct
 }

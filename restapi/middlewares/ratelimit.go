@@ -19,7 +19,7 @@ func RateLimit() gin.HandlerFunc {
 		// 创建限流器
 		limiter := ratelimit.NewBucketWithRate(rateLimtFloat64, rateLimtInt64)
 		if limiter.TakeAvailable(1) == 0 {
-			response.Response(c, response.ResponseStruct{
+			response.Response(c, response.ResStruct{
 				Code: 10022,
 				Msg:  global.I18nMap["10022"],
 			})
