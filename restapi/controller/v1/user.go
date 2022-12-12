@@ -1,8 +1,10 @@
 package v1
 
 import (
+	"GinRESTful/restapi/forms"
 	"GinRESTful/restapi/response"
 	"GinRESTful/restapi/service"
+	"GinRESTful/restapi/utils"
 	"github.com/gin-gonic/gin"
 )
 
@@ -12,8 +14,15 @@ import (
 // 返回值：
 //		无
 func ConRegister(c *gin.Context) {
-	JSONStr := service.SerRegister(c)
-	response.Response(c, JSONStr)
+	// 获取注册需要的参数
+	registerForm := forms.RegisterForm{}
+	if err := c.ShouldBindJSON(&registerForm); err != nil {
+		parErrStr := utils.HandleValidatorError(err)
+		response.Response(c, parErrStr)
+		return
+	}
+	resStruct := service.SerRegister(registerForm, c)
+	response.Response(c, resStruct)
 }
 
 // ConLogin 控制层：用户登录
@@ -22,8 +31,15 @@ func ConRegister(c *gin.Context) {
 // 返回值：
 //		无
 func ConLogin(c *gin.Context) {
-	JSONStr := service.SerLogin(c)
-	response.Response(c, JSONStr)
+	// 获取登录时需要的参数
+	loginForm := forms.LoginForm{}
+	if err := c.ShouldBindJSON(&loginForm); err != nil {
+		parErrStr := utils.HandleValidatorError(err)
+		response.Response(c, parErrStr)
+		return
+	}
+	resStruct := service.SerLogin(loginForm, c)
+	response.Response(c, resStruct)
 }
 
 // ConLogout 控制层：用户登出
@@ -32,8 +48,8 @@ func ConLogin(c *gin.Context) {
 // 返回值：
 //		无
 func ConLogout(c *gin.Context) {
-	JSONStr := service.SerLogout(c)
-	response.Response(c, JSONStr)
+	resStruct := service.SerLogout(c)
+	response.Response(c, resStruct)
 }
 
 // ConGetMyselfInfo 控制层：获取用户自己的信息
@@ -42,8 +58,15 @@ func ConLogout(c *gin.Context) {
 // 返回值：
 //		无
 func ConGetMyselfInfo(c *gin.Context) {
-	JSONStr := service.SerGetMyselfInfo(c)
-	response.Response(c, JSONStr)
+	// 从uri参数中获取用户ID
+	userId := forms.IdForm{}
+	if err := c.ShouldBindUri(&userId); err != nil {
+		parErrStr := utils.HandleValidatorError(err)
+		response.Response(c, parErrStr)
+		return
+	}
+	resStruct := service.SerGetMyselfInfo(userId, c)
+	response.Response(c, resStruct)
 }
 
 // ConGetUserList 控制层：获取用户列表
@@ -52,8 +75,15 @@ func ConGetMyselfInfo(c *gin.Context) {
 // 返回值：
 //		无
 func ConGetUserList(c *gin.Context) {
-	JSONStr := service.SerGetUserList(c)
-	response.Response(c, JSONStr)
+	// 查看用户列表时需要的参数
+	userListForm := forms.UserListForm{}
+	if err := c.ShouldBindQuery(&userListForm); err != nil {
+		parErrStr := utils.HandleValidatorError(err)
+		response.Response(c, parErrStr)
+		return
+	}
+	resStruct := service.SerGetUserList(userListForm)
+	response.Response(c, resStruct)
 }
 
 // ConModifyUserInfo 控制层：修改用户信息
@@ -62,8 +92,22 @@ func ConGetUserList(c *gin.Context) {
 // 返回值：
 //		无
 func ConModifyUserInfo(c *gin.Context) {
-	JSONStr := service.SerModifyUserInfo(c)
-	response.Response(c, JSONStr)
+	// 从uri中获取需要修改的用户ID
+	userId := forms.IdForm{}
+	if err := c.ShouldBindUri(&userId); err != nil {
+		parErrStr := utils.HandleValidatorError(err)
+		response.Response(c, parErrStr)
+		return
+	}
+	// 获取需要修改的字段的参数
+	modUserInfoForm := forms.ModifyUserInfoForm{}
+	if err := c.ShouldBindJSON(&modUserInfoForm); err != nil {
+		parErrStr := utils.HandleValidatorError(err)
+		response.Response(c, parErrStr)
+		return
+	}
+	resStruct := service.SerModifyUserInfo(userId, modUserInfoForm, c)
+	response.Response(c, resStruct)
 }
 
 // ConDelUser 控制层：删除用户信息（需要权限）
@@ -72,6 +116,13 @@ func ConModifyUserInfo(c *gin.Context) {
 // 返回值：
 //		无
 func ConDelUser(c *gin.Context) {
-	JSONStr := service.SerDelUser(c)
-	response.Response(c, JSONStr)
+	// 从uri参数中获取用户ID
+	userId := forms.IdForm{}
+	if err := c.ShouldBindUri(&userId); err != nil {
+		parErrStr := utils.HandleValidatorError(err)
+		response.Response(c, parErrStr)
+		return
+	}
+	resStruct := service.SerDelUser(userId)
+	response.Response(c, resStruct)
 }

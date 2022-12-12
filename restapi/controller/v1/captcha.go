@@ -12,6 +12,6 @@ import (
 // 返回值：
 //		无
 func ConGetCaptcha(c *gin.Context) {
-	JSONStr := service.SerGetCaptcha()
-	response.Response(c, JSONStr)
+	resStruct := service.SerGetCaptcha()
+	response.Response(c, resStruct)
 }
