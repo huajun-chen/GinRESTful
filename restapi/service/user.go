@@ -16,16 +16,11 @@ import (
 
 // SerRegister 业务层：注册用户
 // 参数：
-//		：gin.Context的指针
+//		registerForm：注册账户时需要的参数
+//		c：gin.Context的指针
 // 返回值：
 //		response.ResStruct：响应的结构体
-func SerRegister(c *gin.Context) response.ResStruct {
-	registerForm := forms.RegisterForm{}
-	if err := c.ShouldBindJSON(&registerForm); err != nil {
-		failStruct := utils.HandleValidatorError(err)
-		return failStruct
-	}
-
+func SerRegister(registerForm forms.RegisterForm, c *gin.Context) response.ResStruct {
 	// 验证码
 	userSet := global.Settings.UserInfo
 	// 判断是否开启验证码登录
@@ -88,16 +83,11 @@ func SerRegister(c *gin.Context) response.ResStruct {
 
 // SerLogin 业务层：用户登录
 // 参数：
-//		：gin.Context的指针
+//		loginForm：登录时需要的参数
+//		c：gin.Context的指针
 // 返回值：
 //		response.ResStruct：响应的结构体
-func SerLogin(c *gin.Context) response.ResStruct {
-	loginForm := forms.LoginForm{}
-	if err := c.ShouldBindJSON(&loginForm); err != nil {
-		// 参数异常处理
-		failStruct := utils.HandleValidatorError(err)
-		return failStruct
-	}
+func SerLogin(loginForm forms.LoginForm, c *gin.Context) response.ResStruct {
 	// 验证码
 	userSet := global.Settings.UserInfo
 	// 判断是否开启验证码登录
@@ -128,6 +118,7 @@ func SerLogin(c *gin.Context) response.ResStruct {
 		}
 		return failStruct
 	}
+	// 生成新的Token
 	token := utils.CreateToken(c, userInfo.ID, userInfo.Role, userInfo.UserName)
 	data := forms.RegLogReturn{
 		ID:    userInfo.ID,
@@ -144,7 +135,7 @@ func SerLogin(c *gin.Context) response.ResStruct {
 
 // SerLogout 业务层：用户登出
 // 参数：
-//		：gin.Context的指针
+//		c：gin.Context的指针
 // 返回值：
 //		response.ResStruct：响应的结构体
 func SerLogout(c *gin.Context) response.ResStruct {
@@ -178,16 +169,11 @@ func SerLogout(c *gin.Context) response.ResStruct {
 
 // SerGetMyselfInfo 业务层：获取用户自己的信息
 // 参数：
-//		：gin.Context的指针
+//		userId：用户ID参数的结构体
+//		c：gin.Context的指针
 // 返回值：
 //		response.ResStruct：响应的结构体
-func SerGetMyselfInfo(c *gin.Context) response.ResStruct {
-	// 从参数中获取用户ID
-	userId := forms.IdForm{}
-	if err := c.ShouldBindUri(&userId); err != nil {
-		failStruct := utils.HandleValidatorError(err)
-		return failStruct
-	}
+func SerGetMyselfInfo(userId forms.IdForm, c *gin.Context) response.ResStruct {
 	// 判断是本人，不能获取别人的用户信息
 	tokenUserId, _ := c.Get("userId")
 	if tokenUserId != userId.ID {
@@ -219,16 +205,11 @@ func SerGetMyselfInfo(c *gin.Context) response.ResStruct {
 
 // SerGetUserList 业务层：获取用户列表
 // 参数：
-//		：gin.Context的指针
+//		userListForm：查看用户列表时需要的参数
+//		c：gin.Context的指针
 // 返回值：
 //		response.ResStruct：响应的结构体
-func SerGetUserList(c *gin.Context) response.ResStruct {
-	// 获取参数
-	userListForm := forms.UserListForm{}
-	if err := c.ShouldBindQuery(&userListForm); err != nil {
-		failStruct := utils.HandleValidatorError(err)
-		return failStruct
-	}
+func SerGetUserList(userListForm forms.UserListForm) response.ResStruct {
 	// 获取数据
 	page, pageSize := utils.PageZero(userListForm.Page, userListForm.PageSize)
 	total, userList, err := dao.DaoGetUserList(page, pageSize)
@@ -277,22 +258,12 @@ func SerGetUserList(c *gin.Context) response.ResStruct {
 
 // SerModifyUserInfo 业务层：修改用户信息
 // 参数：
-//		：gin.Context的指针
+//		userId：用户ID
+//		modUserInfoForm：需要修改的信息
+//		c：gin.Context的指针
 // 返回值：
 //		response.ResStruct：响应的结构体
-func SerModifyUserInfo(c *gin.Context) response.ResStruct {
-	// 获取需要修改的用户ID
-	userId := forms.IdForm{}
-	if err := c.ShouldBindUri(&userId); err != nil {
-		failStruct := utils.HandleValidatorError(err)
-		return failStruct
-	}
-	// 获取需要修改的字段的参数
-	modUserInfoForm := forms.ModifyUserInfoForm{}
-	if err := c.ShouldBindJSON(&modUserInfoForm); err != nil {
-		failStruct := utils.HandleValidatorError(err)
-		return failStruct
-	}
+func SerModifyUserInfo(userId forms.IdForm, modUserInfoForm forms.ModifyUserInfoForm, c *gin.Context) response.ResStruct {
 	// 判断是否是本人，只能修改自己的信息
 	tokenUserId, _ := c.Get("userId")
 	if tokenUserId != userId.ID {
@@ -352,6 +323,7 @@ func SerModifyUserInfo(c *gin.Context) response.ResStruct {
 		}
 		return failStruct
 	}
+
 	succStruct := response.ResStruct{
 		Code: http.StatusOK,
 		Msg:  global.I18nMap["2005"],
@@ -361,16 +333,10 @@ func SerModifyUserInfo(c *gin.Context) response.ResStruct {
 
 // SerDelUser 业务层：删除用户信息（需要权限）
 // 参数：
-//		：gin.Context的指针
+//		userId：用户ID
 // 返回值：
 //		response.ResStruct：响应的结构体
-func SerDelUser(c *gin.Context) response.ResStruct {
-	// 从参数中获取用户ID
-	userId := forms.IdForm{}
-	if err := c.ShouldBindUri(&userId); err != nil {
-		failStruct := utils.HandleValidatorError(err)
-		return failStruct
-	}
+func SerDelUser(userId forms.IdForm) response.ResStruct {
 	userMod := models.User{ID: userId.ID}
 	// 删除用户
 	err := dao.DaoDelUserToPriKey(userMod)
@@ -382,6 +348,7 @@ func SerDelUser(c *gin.Context) response.ResStruct {
 		}
 		return failStruct
 	}
+
 	succStruct := response.ResStruct{
 		Code: http.StatusOK,
 		Msg:  global.I18nMap["2004"],

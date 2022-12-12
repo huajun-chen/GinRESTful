@@ -12,6 +12,6 @@ import (
 // 返回值：
 //		无
 func ConGetSystemInfo(c *gin.Context) {
-	JSONStr := service.SerGetSystemInfo()
-	response.Response(c, JSONStr)
+	resStruct := service.SerGetSystemInfo()
+	response.Response(c, resStruct)
 }
