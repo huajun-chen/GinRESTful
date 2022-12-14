@@ -13,7 +13,7 @@ type ResStruct struct {
 	Data interface{} `json:"data,omitempty"` // 响应数据
 }
 
-// Response 同一封装响应函数
+// Response 统一封装响应函数
 // 参数：
 //		c：gin.Context的指针
 //		response：相应的结构体

@@ -68,6 +68,6 @@ type UserConfig struct {
 // LanguageCfg 语言相关配置
 type LanguageCfg struct {
 	LanguageType string `mapstructure:"languageType"` // 语言类型（默认中文）
-	Tranfilepath string `mapstructure:"tranfilepath"` // 翻译文件位置
+	TranfilePath string `mapstructure:"tranfilePath"` // 翻译文件位置
 	AllLanguage  string `mapstructure:"allLanguage"`  // 项目会使用到的全部语言
 }

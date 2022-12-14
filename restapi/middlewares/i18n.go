@@ -24,7 +24,7 @@ func I18n() gin.HandlerFunc {
 			acceptLanguage = global.Settings.Language.LanguageType
 		}
 		// 文件完整路径
-		filePath := fmt.Sprintf("%s/%s.json", global.Settings.Language.Tranfilepath, acceptLanguage)
+		filePath := fmt.Sprintf("%s/%s.json", global.Settings.Language.TranfilePath, acceptLanguage)
 		// 根据Accept-Language读取对应的json文件
 		translations, err := utils.ReadJSON(filePath)
 		if err != nil {

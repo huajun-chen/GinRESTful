@@ -45,7 +45,7 @@
 - 请求
 
   ```json
-  GET /api/v1/captcha
+  GET /api/v1/base/captcha
   ```
 
 - 参数列表
@@ -118,7 +118,7 @@
 - 请求
 
   ```json
-  POST /api/v1/register
+  POST /api/v1/user/register
   ```
 
 - 参数列表
@@ -341,7 +341,7 @@
 - 请求
 
   ```json
-  DELETE /api/v1/logout
+  DELETE /api/v1/user/logout
   ```
 
 - 参数列表
