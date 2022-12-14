@@ -43,5 +43,5 @@ user:
 
 language:
   languageType: "zh-CN"
-  tranfilepath: "./static/i18n"
+  tranfilePath: "./static/i18n"
   allLanguage: "zh-CN,en-US"
