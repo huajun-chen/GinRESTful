@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"GinRESTful/restapi/test"
 	"encoding/json"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
@@ -21,6 +22,8 @@ type captchaData struct {
 }
 
 func TestGetCaptcha(t *testing.T) {
+	// 初始化基础的测试环境
+	test.InitTestBase()
 	url := "/api/v1/base/captcha"
 	// 设置Gin框架运行模式（ReleaseMode：生产环境、TestMode：测试环境）
 	gin.SetMode(gin.TestMode)

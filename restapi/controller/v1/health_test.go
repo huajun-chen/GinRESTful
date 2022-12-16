@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"GinRESTful/restapi/test"
 	"encoding/json"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
@@ -41,6 +42,8 @@ type healthData struct {
 }
 
 func TestConGetSystemInfo(t *testing.T) {
+	// 初始化基础的测试环境
+	test.InitTestBase()
 	url := "/api/v1/base/health"
 	gin.SetMode(gin.TestMode)
 	r := gin.New()
