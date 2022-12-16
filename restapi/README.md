@@ -36,7 +36,7 @@
 
 目录结构：
 
-<div align="center"><img src="http://tva1.sinaimg.cn/large/0079DIvogy1h90cb9qivbj30hq0u6q78.jpg" alt="image.png" style="zoom:40%;" /></div>
+<div align="center"><img src="http://tva1.sinaimg.cn/large/0079DIvogy1h95wz41d0zj30gq0v8aea.jpg" alt="image.png" style="zoom:40%;" /></div>
 
 目录说明：
 
@@ -57,6 +57,7 @@
 | router           | 路由                       | routerv1.go：V1版本路由                                      |
 | Service          | 业务层                     | captcha.go：生成图片验证码<br/>health.go：获取系统CPU、内存、磁盘等信息<br/>user.go：用户模块控制层面相关代码 |
 | static           | 静态资源文件夹             | i18n：存放i18n国际化翻译json文件                             |
+| test             | 测试相关                   | testinit.go：初始化测试代码所需的环境                        |
 | utils            | 工具                       | json.go：读取json文件，将其序列化为map<br>jwt.go：Token相关的函数/方法<br>md5.go：MD5计算<br>migration.go：执行main启动项目时对数据库表新建或迁移<br>page.go：与页数，每页的数量相关的代码封装<br>password.go：密码加密与密码校验<br>redis.go：与Redis操作相关的方法<br>systeminfo.go：获取系统CPU、内存、磁盘等信息<br>validator.go：参数校验出现错误时代码统一封装 |
 | Dockerfile       | Dockerfile文件             |                                                              |
 | go.mod           | go mod文件                 |                                                              |
@@ -332,6 +333,26 @@ docker run -d -it --link mysql:mysql --link redis:redis -p 8080:8080 -v /opt/Gin
 ```
 
 `6f5632156de8`是构建的镜像`ID`
+
+### 如何测试
+
+接口测试
+
+`setting-dev.yaml`配置文件中，将`user`下的`  captchaLogin`由`true`修改为`false`，关闭验证码验证开关
+
+切片到`restapi/controller/v1`目录下
+
+测试单个文件：
+
+```sh
+go test -v xxx_test.go xxx.go
+```
+
+测试`controller/v1`下的全部文件：
+
+```sh
+go test
+```
 
 ### TODO
 
