@@ -4,6 +4,7 @@ import (
 	"GinRESTful/restapi/global"
 	"GinRESTful/restapi/middlewares"
 	"GinRESTful/restapi/router"
+	"github.com/gin-contrib/pprof"
 	"github.com/gin-gonic/gin"
 )
 
@@ -14,6 +15,8 @@ import (
 //		无
 func InitRouter() *gin.Engine {
 	Router := gin.Default()
+	// 注册pprof路由
+	pprof.Register(Router)
 	// 跨域中间件
 	Router.Use(middlewares.Cors())
 	// 注册zap相关中间件
