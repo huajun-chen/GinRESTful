@@ -36,7 +36,7 @@ adminaccount:
   password: "admin12345"
 
 user:
-  pwdEncDiff: 16
+  pwdEncDiff: 10
   captchaLogin: true
   ipFrequency: 100
   timeLimit: 1
